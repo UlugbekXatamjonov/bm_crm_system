@@ -1,7 +1,50 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils.html import mark_safe
 
+
+class UserManager(BaseUserManager):
+    def create_user(self, first_name, last_name, email, username,
+                    passport, date_of_bith, phone1, phone2, gender, address,
+                    password=None): 
+
+        if not passport:
+            raise ValueError("Foydalanuvchida 'passport' bo'lishi shart !")
+        user = self.model(
+            first_name=first_name,
+            last_name=last_name,
+            email = email,
+            username = username,
+            passport = passport, 
+            date_of_bith = date_of_bith,
+            phone1 = phone1,
+            phone2 = phone2,
+            gender = gender,
+            address = address
+            
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None):
+
+        user = self.create_user(
+            password=password,
+            first_name='Admin',
+            last_name='Admin',
+            email = email,
+            passport = "AA0000000", 
+            date_of_bith = "01-01-2000",
+            phone1 = '998990000000',
+            phone2 = '998990000001',
+            gender = "male",
+            address = "Address"
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
 class CustomUser(AbstractUser):
     """
