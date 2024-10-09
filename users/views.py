@@ -11,7 +11,15 @@ from rest_framework import viewsets
 
 from .renderers import UserRenderer
 from .models import CustomUser
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, LogoutSerializer
+
+from .serializers import \
+    UserRegistrationSerializer,\
+        UserLoginSerializer,\
+        LogoutSerializer,\
+        UserChangePasswordSerializer,\
+        SendPasswordResetEmailSerializer,\
+        UserPasswordResetSerializer
+
 
 
 """ Viewsets for User Authentication """
@@ -55,6 +63,38 @@ class LogoutAPIView(APIView):
             serializer.save()
             return Response({"message": "Tizimdan muvaffaqiyatli chiqdingiz !"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            request.user.set_password(serializer.data['new_password'])
+            request.user.save()
+            return Response({"message": "Parol muvaffaqiyatli o'zgartirildi !"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SendPasswordResetEmailView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = SendPasswordResetEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            # Email yuborish jarayoni (Token bilan)
+            return Response({"message": "Email yuborildi."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPasswordResetView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = UserPasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            # Parolni yangilash jarayoni
+            return Response({"message": "Parol muvaffaqiyatli yangilandi."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 

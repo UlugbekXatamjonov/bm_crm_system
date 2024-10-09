@@ -4,10 +4,12 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    UserRegistrationView, UserLoginView, LogoutAPIView,
-    # UserProfileView,
-    # UserChangePasswordView, SendPasswordResetEmailView,
-    # UserPasswordResetView, 
+    UserRegistrationView, \
+    UserLoginView,\
+    LogoutAPIView,\
+    UserChangePasswordView,\
+    SendPasswordResetEmailView,\
+    UserPasswordResetView
 )
 
 app_name = 'student'
@@ -21,10 +23,9 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', LogoutAPIView.as_view(), name='logout'),
     
-    # path('profile/', UserProfileView.as_view(), name='profile'),
-    # path('change-password/', UserChangePasswordView.as_view(), name='change_password'),
-    # path('reset-password-email/', SendPasswordResetEmailView.as_view(), name='reset_password_email'),
-    # path('reset-password/', UserPasswordResetView.as_view(), name='reset_password'),
+    path('change-password/', UserChangePasswordView.as_view(), name='change_password'),
+    path('reset-password-email/', SendPasswordResetEmailView.as_view(), name='reset_password_email'),
+    path('reset-password/', UserPasswordResetView.as_view(), name='reset_password'),
 ]
 
 

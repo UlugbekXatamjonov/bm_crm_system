@@ -1,0 +1,5 @@
+Loyihadagi muammolar:
+
+-Active userni logout qilib tokenini back_list ga qo'shsam ham, 
+    token yana ishlayveryapdi.
+-
