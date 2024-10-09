@@ -5,7 +5,7 @@ from django.utils.html import mark_safe
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, username,
+    def create_user(self, first_name, last_name, email, 
                     passport, date_of_bith, phone1, phone2, gender, address,
                     password=None): 
 
@@ -15,28 +15,26 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             email = email,
-            username = username,
             passport = passport, 
             date_of_bith = date_of_bith,
             phone1 = phone1,
             phone2 = phone2,
             gender = gender,
             address = address
-            
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, email, passport, password=None):
 
         user = self.create_user(
             password=password,
             first_name='Admin',
-            last_name='Admin',
+            last_name='Padmin',
             email = email,
-            passport = "AA0000000", 
-            date_of_bith = "01-01-2000",
+            passport = passport, 
+            date_of_bith = "2000-01-01", # bu xuddi shu YYYY-MM-DD formatda bo'lishi shart ! 
             phone1 = '998990000000',
             phone2 = '998990000001',
             gender = "male",
@@ -75,6 +73,12 @@ class CustomUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    username = None
+    USERNAME_FIELD = 'passport'
+    REQUIRED_FIELDS = ['email', ]
+    
+    objects = UserManager()
+    
     def __str__(self):
-        return self.username
+        return f"{self.first_name} {self.last_name}"
 

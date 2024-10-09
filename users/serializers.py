@@ -1,9 +1,11 @@
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth import authenticate
 
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
 
 from .models import CustomUser
 from .utils import Util
@@ -18,7 +20,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     model = CustomUser
     fields = (
             "password",
-            "password2",
+            "password2", 
+            "first_name",
             "last_name",
             "email",
             "username",
@@ -42,8 +45,51 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     return attrs
 
   def create(self, validate_data):
-    # validated_data.pop('password2')
     validate_data.pop('password2') 
     return CustomUser.objects.create_user(**validate_data)
 
 
+class UserLoginSerializer(serializers.Serializer):
+    passport = serializers.CharField(max_length=15)
+    password = serializers.CharField(max_length=128, write_only=True)
+
+    def validate(self, attrs):
+        passport = attrs.get('passport')
+        password = attrs.get('password')
+
+        # Foydalanuvchini passport va password orqali autentifikatsiya qilishi kerak
+        user = authenticate(passport=passport, password=password)
+        if not user:
+            raise serializers.ValidationError("Passport yoki parol noto'g'ri !")
+        attrs['user'] = user
+        return attrs
+      
+        
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    # Tokenni blacklist ga qo'shish
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            token = RefreshToken(self.token)
+            token.blacklist()
+        except Exception as e:
+            raise serializers.ValidationError("Tokenni blacklist ga qo'shib bo'lmadi, yoki bu token avval ishlatilgan !")
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+    
