@@ -18,7 +18,7 @@ from .serializers import \
         LogoutSerializer,\
         UserChangePasswordSerializer,\
         SendPasswordResetEmailSerializer,\
-        UserPasswordResetSerializer
+        UserPasswordResetSerializer 
 
 
 
@@ -66,33 +66,31 @@ class LogoutAPIView(APIView):
 
 
 class UserChangePasswordView(APIView):
+    renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = UserChangePasswordSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            request.user.set_password(serializer.data['new_password'])
-            request.user.save()
-            return Response({"message": "Parol muvaffaqiyatli o'zgartirildi !"}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def post(self, request, format=None):
+        serializer = UserChangePasswordSerializer(
+            data=request.data, context={'user': request.user})
+        serializer.is_valid(raise_exception=True)
+        return Response({'message': "Parol muvaffaqiyatli o'zgartirildi"}, status=status.HTTP_200_OK)
 
 class SendPasswordResetEmailView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = SendPasswordResetEmailSerializer(data=request.data)
-        if serializer.is_valid():
-            # Email yuborish jarayoni (Token bilan)
-            return Response({"message": "Email yuborildi."}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    renderer_classes = [UserRenderer]
 
+    def post(self, request, format=None):
+        serializer = SendPasswordResetEmailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({'message': "Parolni tiklash uchun link yuborildi. Iltimos emailingizni tekshiring"}, status=status.HTTP_200_OK)
 
 class UserPasswordResetView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = UserPasswordResetSerializer(data=request.data)
-        if serializer.is_valid():
-            # Parolni yangilash jarayoni
-            return Response({"message": "Parol muvaffaqiyatli yangilandi."}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    renderer_classes = [UserRenderer]
+
+    def post(self, request, uid, token, format=None):
+        serializer = UserPasswordResetSerializer(
+            data=request.data, context={'uid': uid, 'token': token})
+        serializer.is_valid(raise_exception=True)
+        return Response({'message': 'Parol muvaffaqiyatli yangilandi'}, status=status.HTTP_200_OK)
 
 
 

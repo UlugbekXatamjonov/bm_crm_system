@@ -16,6 +16,14 @@ def worker_directory_path(instance, filename):
     # Faylni saqlash yo'lini yaratamiz
     return f'workers_photos/{worker_name}_{instance.user.id}/{filename}'
 
+PERSONAL_STATUS = [
+        ('teacher',"O'qtuvchi"),
+        ('asistent_teacher',"Asistent o'qtuvchi"),
+        ('father',"Ota-ona"),
+        ('student',"O'quvchi"),
+    ]
+    
+
 class Teacher(models.Model):
     """
     O'qituvchi modeliga oid maydonlar.
@@ -41,12 +49,21 @@ class Teacher(models.Model):
         ('chemistry','Kimyo'), 
     ]
     
+    TEACHER_PERSONAL_STATUS = [
+        ('teacher',"O'qtuvchi"),
+        ('asistent_teacher',"Asistent o'qtuvchi")
+    ]
+    
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to=teacher_directory_path, null=True, blank=True, verbose_name="Rasm")
     salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
     subject = models.CharField(max_length=100, choices=TEACHER_SUBJECTS, null=True, blank=True, verbose_name="Fan")
     is_class_leader = models.BooleanField(default=False, verbose_name="Sinf rahbar")
     # class_group = models.ForeignKey('group.Group', on_delete=models.SET_NULL, null=True)
+    personal_status = models.CharField(max_length=100, null=True, blank=True, choices=PERSONAL_STATUS, default="teacher", verbose_name="Shaxsiy status")
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {self.subject}"
 
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.subject}"

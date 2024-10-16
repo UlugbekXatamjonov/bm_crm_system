@@ -2,4 +2,5 @@ Loyihadagi muammolar:
 
 -Active userni logout qilib tokenini back_list ga qo'shsam ham, 
     token yana ishlayveryapdi.
--
+- Passwordt reset email va Password reset qilmlari ishlamayapdi, SMTP hizmatni ulash kk !
+- 

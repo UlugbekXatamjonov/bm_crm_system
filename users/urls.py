@@ -24,8 +24,8 @@ urlpatterns = [
     path('logout/', LogoutAPIView.as_view(), name='logout'),
     
     path('change-password/', UserChangePasswordView.as_view(), name='change_password'),
-    path('reset-password-email/', SendPasswordResetEmailView.as_view(), name='reset_password_email'),
-    path('reset-password/', UserPasswordResetView.as_view(), name='reset_password'),
+    # path('reset-password-email/', SendPasswordResetEmailView.as_view(), name='reset_password_email'),
+    # path('reset-password/', UserPasswordResetView.as_view(), name='reset_password'),
 ]
 
 
