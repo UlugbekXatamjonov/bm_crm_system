@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
+    'django_filters',
     
     
     # Local apps
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     "student",
     "attandence", # davomat
     "group",
+    "main_website" # Asosiy website uchun API lar
 ]
 
 
@@ -166,8 +168,8 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10), # minutes ga o'zgartirib qoyish kk, oxirida
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10), # days ni 3 kun qilib qo'yish kk
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',

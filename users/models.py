@@ -6,7 +6,7 @@ from django.utils.html import mark_safe
 
 class UserManager(BaseUserManager):
     def create_user(self, first_name, last_name, email, 
-                    passport, date_of_bith, phone1, phone2, gender, address,
+                    passport, date_of_bith, phone1, phone2, gender, address, personal_status,
                     password=None): 
 
         if not passport:
@@ -20,7 +20,8 @@ class UserManager(BaseUserManager):
             phone1 = phone1,
             phone2 = phone2,
             gender = gender,
-            address = address
+            address = address,
+            personal_status = personal_status
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -38,7 +39,8 @@ class UserManager(BaseUserManager):
             phone1 = '998990000000',
             phone2 = '998990000001',
             gender = "male",
-            address = "Address"
+            address = "Address",
+            personal_status = 'director'
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -62,11 +64,32 @@ class CustomUser(AbstractUser):
         ('female', 'Ayol')
     ]
     
+    PERSONAL_STATUS = [
+        ("director", "Direktor"),
+        ("manager", "Mudir"),
+        
+        ("assistant", "Kotiba"),
+        ("worker", "Oddiy hodim"),
+        
+        ('teacher',"O'qtuvchi"),
+        ('assistant_teacher',"Asistent o'qtuvchi"),
+        
+        ('father',"Ota-ona"),
+        ('student',"O'quvchi"),
+        
+        # ("cook", "Oshpaz"),
+        # ("kitchen_staff", "Oshxona hodimi"),
+        # ("cleaner", "Tozalovchi"),
+        # ("guard", "Qorovul"),
+    ]
+
     passport = models.CharField(max_length=15, unique=True, null=True, blank=True, verbose_name="Passport")
     date_of_bith = models.DateField(null=True, blank=True, verbose_name="Tug'ilgan sana")
     phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True, verbose_name="Telefon raqam")
     phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True, verbose_name="Telefon raqam")
     gender = models.CharField(max_length=10, choices=GENDER, null=True, blank=True, verbose_name="Jinsi")
+    personal_status = models.CharField(max_length=30, null=True, blank=True, choices=PERSONAL_STATUS, default="teacher", verbose_name="Shaxsiy status")
+
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name="Manzil")
     
     status = models.BooleanField(default=True, verbose_name="Holati")

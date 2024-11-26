@@ -2,5 +2,15 @@ Loyihadagi muammolar:
 
 -Active userni logout qilib tokenini back_list ga qo'shsam ham, 
     token yana ishlayveryapdi.
-- Passwordt reset email va Password reset qilmlari ishlamayapdi, SMTP hizmatni ulash kk !
+- Passwordt reset email va Password reset qismlari ishlamayapdi, SMTP hizmatni ulash kk !
 - 
+
+
+/---------- Works for net day -----------/
+
+- MW_HPA_Teachers_Viewset da filterni ishlatish(statusi bo'yicha saralab olish kk)
+- MW_HPA_Teachers_Viewset da bitta obyekt uchun path yozish kk
+- Qolgan API larni ham chiqarish kk
+        
+/---------- Works for net day -----------/
+
