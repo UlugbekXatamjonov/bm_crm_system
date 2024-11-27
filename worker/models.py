@@ -20,6 +20,8 @@ def worker_directory_path(instance, filename):
     # Faylni saqlash yo'lini yaratamiz
     return f'workers_photos/{worker_name}_{instance.user.id}/{filename}'
 
+
+"""------------ Slug uchun funksiyalar --------------"""
 def slug_funckion_for_teacher(self):
         """ Ikkita maydonni sludada birlashtirish """
         return "{}-{}".format(self.user.first_name, self.user.last_name)
