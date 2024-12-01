@@ -14,9 +14,9 @@ class Teacher_SocialMedia_Admin(admin.TabularInline):
 
 @admin.register(Teacher)
 class Teacher_Admin(admin.ModelAdmin):
-    list_display = ('user__first_name', 'user__last_name', 'subject', 'is_class_leader')
-    search_fields = ('user__first_name', 'user__last_name', 'subject')
-    list_filter = ('is_class_leader', "subject", 'user__gender')
+    list_display = ('user__first_name', 'user__last_name', 'science', 'is_class_leader')
+    search_fields = ('user__first_name', 'user__last_name', 'science')
+    list_filter = ('is_class_leader', "science", 'user__gender')
     inlines = [Teacher_Certificate_Admin, Teacher_SocialMedia_Admin]
 
 

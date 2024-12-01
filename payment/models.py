@@ -37,7 +37,7 @@ class Payment(models.Model):
     amount_due = models.DecimalField(max_digits=10, decimal_places=2, default=PAYMENT_AMOUNT, null=True, blank=True, verbose_name="To'lov qilinishi kerak bo'lgan summa")
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=PAYMENT_AMOUNT, verbose_name="To'langan summa")
     payment_status = models.CharField(max_length=30, choices=PAYMENT_STATUS, null=True, blank=True, verbose_name="To'lov holati")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True)
         
     @property
     def remaining_amount(self):
@@ -74,7 +74,7 @@ class Expenses(models.Model):
     amount = models.DecimalField(max_digits=11, decimal_places=2, verbose_name="Summa")
     comment = models.TextField(null=True, blank=True, verbose_name="Izoh")
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} - {self.amount} so'm"

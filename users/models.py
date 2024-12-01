@@ -27,6 +27,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+    """ ❗❗❗ Bazani toza qilib yangi superadmin yaratgandan keyin, 
+    bazani ochib is_superuser va is_staff maydoniga 1 qiymatini berish kerak  ❗❗❗ """
     def create_superuser(self, email, passport, password=None):
 
         user = self.create_user(
@@ -45,6 +48,7 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+
 
 class CustomUser(AbstractUser):
     """
@@ -93,8 +97,8 @@ class CustomUser(AbstractUser):
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name="Manzil")
     
     status = models.BooleanField(default=True, verbose_name="Holati")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     
     username = None
     USERNAME_FIELD = 'passport'

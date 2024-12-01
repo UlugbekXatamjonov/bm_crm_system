@@ -9,7 +9,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = ['id', 'user', 'slug', 'photo', 'salary', 'subject', 'is_class_leader']
+        fields = ['id', 'user', 'slug', 'photo', 'salary', 'science', 'is_class_leader']
 
     # Foydalanuvchining to'liq ismini qaytarish uchun maxsus method qo'shamiz
     def get_full_name(self, obj):

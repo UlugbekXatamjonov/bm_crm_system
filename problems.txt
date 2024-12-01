@@ -8,8 +8,6 @@ Loyihadagi muammolar:
 
 /---------- Works for net day -----------/
 
-- MW_Teachers_Serializer uchun maydonlarni toliq qilish kk(sertificate, scial_media);
-- Teacher modelidagi subject uchun alohida model yaratib ForejnKey bn ulash kk
 - Qolgan API larni ham chiqarish kk
         
 /---------- Works for net day -----------/

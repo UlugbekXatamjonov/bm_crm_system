@@ -24,6 +24,8 @@ class Attendance(models.Model):
     came = models.BooleanField(default=False, verbose_name="Kelmadi")
     comment = models.TextField(null=True, blank=True, verbose_name="Izoh")
 
+    created_on = models.DateTimeField(auto_now_add=True, verbose_name="Davomat olingan sana")
+    
     def __str__(self):
         return f"{self.student or self.teacher or self.worker} - {self.date}"
 

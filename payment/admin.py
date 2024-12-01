@@ -10,10 +10,10 @@ class PaymentAdmin(admin.ModelAdmin):
         'student__user__passport', "comment"
     )
     
-    list_filter = ("month", "year", "created_at", 'payment_status', 'student__group')
+    list_filter = ("month", "year", "created_on", 'payment_status', 'student__group')
 
 @admin.register(Expenses)
 class ExpensesAdmin(admin.ModelAdmin):
     list_display = ('title', 'expenses_type', 'amount', "month")
     search_fields = ('title', "comment")
-    list_filter = ("expenses_type", "month", "year", "created_at")
+    list_filter = ("expenses_type", "month", "year", "created_on")
