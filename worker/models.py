@@ -136,6 +136,6 @@ class Worker(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.position}"
+        return f"{self.user.get_full_name()}"
 
 

@@ -6,7 +6,25 @@ Loyihadagi muammolar:
 - 
 
 
+
+/---------- Does works -----------/
+
+-Worker viewslari uchun try-exsept qo'shildi.
+-Statistik malumotlar uchun API chiqdi.
+-Student Sertifikati uchun API chiqdi.
+- Natijalar bo'limi uchu  API tayyor qilindi.
+- Home page qismi uchun fanlar va haftalik imtihonlar qismi uchun API chiqdi.
+- yangi exam appi yasaldi.
+
+/---------- Does works -----------/
+
+
+
 /---------- Works for net day -----------/
+
+- choraklik g'oliblari qismini boshlash va tugatish
+- hamma kamchiliklarni ko'rib chiqish
+- Asosiy saytning kamchiliklari qolmagan bo'lsa, serverga kuylash
 
 - Qolgan API larni ham chiqarish kk
         

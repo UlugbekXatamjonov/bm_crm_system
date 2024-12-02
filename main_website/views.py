@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from datetime import datetime
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.throttling import AnonRateThrottle
@@ -9,12 +11,100 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer
-from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia
+from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia, Worker
+from student.models import Student, Student_Certificate
+from science.models import Science
+from exam.models import Weeky_exam_photos
+
+from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
+    MW_HPA_Students_Certificate_Serializer, MW_Student_Certificate_Serializer, MW_HPA_Science_Serializer,\
+    MW_HPA_Weeky_Exam_Photos_Serializer
 
 
 # Create your views here.
+""" -------------- Home page API -------------- """
+@api_view(['GET'])
+@throttle_classes([AnonRateThrottle])
+def mw_mainpage_statistic_datas(request):
+    """
+    Asosiy websaytning Homepage qismidagi statistika bo'limi uchun API 
+    So'rov turi: GET
     
+    Maydonlar:  
+    yearly_experiense - tajriba yili
+    students_count - o'quvchilar soni
+    banchs_count - filiallar soni
+    teachers_count - o'qtuvchilar soni
+    """
+    
+    try:
+        yearly_experiense = datetime.now().year - 2023 # yil o'tgani sari o'zgaruvchi qiymati aftomatik oshib boradi
+        students_count = Student.objects.filter(user__status=True).count()
+        banchs_count = 2 # ❗❗❗ Bu o'zgaruvchi "qo'lda" o'zgartiriladi ❗❗❗ 
+        teachers_count = Teacher.objects.filter(user__status=True).count() + Worker.objects.filter(user__status=True).count()
+        
+        data = [{
+            "yearly_experiense" : yearly_experiense,
+            "students_count" : students_count,
+            "banchs_count" : banchs_count,
+            "teachers_count" : teachers_count,
+        }]
+    except:
+        return Response({'error': "Ma'lumotlarni to'plashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+    
+    try:
+        serializer = MW_HPA_Statistic_Data_Serializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        """ serializer.data[0] --> yuborilayotgan data ro'yhat bo'lib qoldi uni tsiklda bo'masligi uchun,
+            [0] elementni o'zini yuboriladi."""
+        return Response(serializer.data[0], status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+    
+ 
+@api_view(['GET'])
+@throttle_classes([AnonRateThrottle])
+def mw_mainpage_sciences_list(request):
+    """
+    Asosiy websaytning Homepage qismidagi Iqtisoslik fanlari bo'limi uchun API 
+    So'rov turi: GET
+    
+    Maydonlar:  
+    name - fan nomi
+    photo - fan rasmi
+    about - fan  haqida
+    """
+    
+    try:    
+        science = Science.objects.filter(status=True, is_mainpage=True)
+        serializer = MW_HPA_Science_Serializer(science, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+    
+
+@api_view(['GET'])
+@throttle_classes([AnonRateThrottle])
+def mw_mainpage_weekly_exam_photos_list(request):
+    """
+        Asosiy websaytning Homepage qismidagi Haftalik imtihonlar bo'limi uchun API 
+        So'rov turi: GET
+        
+        Maydonlar:  
+        photo - rasm
+    """
+    
+    try:
+        photos = Weeky_exam_photos.objects.filter(status=True)
+        serializer = MW_HPA_Weeky_Exam_Photos_Serializer(photos, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+ 
+        
 @api_view(['GET'])
 @throttle_classes([AnonRateThrottle])  # Faqat ushbu funksiya uchun AnonRateThrottle ni yoqish
 def mw_mainpage_teachers_list(request):
@@ -27,13 +117,43 @@ def mw_mainpage_teachers_list(request):
     last_name - familiya
     photo - o'qtuvchining rasmi
     """
+    try:
+        teachers = Teacher.objects.filter(user__status=True, is_mainpage=True) # Filtrlangan querysetni olish
+        serializer = MW_HPA_Teachers_Serializer(teachers, many=True) # Serializer orqali ma'lumotlarni formatlash
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+
+   
+@api_view(['GET'])
+@throttle_classes([AnonRateThrottle])
+def mw_mainpage_students_certificate(request):
+    """
+    Asosiy websaytning Homepage qismidagi O'quvchilarning natijalari bo'limi uchun API 
+    So'rov turi: GET
     
-    teachers = Teacher.objects.filter(user__status=True, is_mainpage=True) # Filtrlangan querysetni olish
-    serializer = MW_HPA_Teachers_Serializer(teachers, many=True) # Serializer orqali ma'lumotlarni formatlash
-    
-    return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
+    Maydonlar:  
+    first_name - o'quvchining ismi  
+    last_name - o'quvchining familiyasi
+    student_photo - o'quvchining rasmi
+    science_name - fan nomi
+    name -  sertifikat nomi
+    photo -  sertifikat rasmi
+    about - sertifikat haqida
+    """
+    try:
+        certificate = Student_Certificate.objects.filter(status=True, is_mainpage=True)
+        serializer = MW_HPA_Students_Certificate_Serializer(certificate, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except: 
+        return Response({'error': "Ma'lumotlarni to'plashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+        
 
 
+
+""" -------------- Teacher section API -------------- """
 @throttle_classes([AnonRateThrottle])
 @api_view(['GET'])
 def mw_teachers_section_list(request):
@@ -58,13 +178,41 @@ def mw_teachers_section_list(request):
             photo - sertifikat rasmi
     """
 
-    teachers = Teacher.objects.filter(user__status = True)
-    serializer = MW_Teachers_Serializer(teachers, many=True)
+    try:
+        teachers = Teacher.objects.filter(user__status = True)
+        serializer = MW_Teachers_Serializer(teachers, many=True)
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
 
 
 
+""" -------------- Result section API -------------- """
+@throttle_classes([AnonRateThrottle])
+@api_view(['GET'])
+def mw_student_certificate_section_list(request):
+    """
+    Asosiy websaytning Natijalar bo'limi uchun API 
+    So'rov turi: GET
+    
+    Maydonlar:  
+    first_name - o'quvchining ismi  
+    last_name - o'quvchining familiyasi
+    student_photo - o'quvchining rasmi
+    science_name - fan nomi
+    name -  sertifikat nomi
+    photo -  sertifikat rasmi
+    about - sertifikat haqida
+    """
+    
+    try:
+        certificates = Student_Certificate.objects.filter(status=True)
+        serializer = MW_Student_Certificate_Serializer(certificates, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return  Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
 
 
 

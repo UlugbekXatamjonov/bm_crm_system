@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     "attandence", # davomat
     "group",
     "science",
-    "main_website" # Asosiy website uchun API lar
+    "main_website", # Asosiy website uchun API lar
+    "exam",
 ]
 
 
