@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia
 from student.models import Student, Student_Certificate
 from science.models import Science
-from exam.models import Weeky_exam_photos
+from exam.models import Weeky_exam_photos, Quarter_winners
+
 
 """ -------------- Home page API -------------- """
 class MW_HPA_Statistic_Data_Serializer(Serializer):
@@ -31,6 +32,14 @@ class MW_HPA_Weeky_Exam_Photos_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Weeky_exam_photos
         fields = ['photo',]
+
+
+class MW_HPA_Quarter_winners_Serializer(serializers.ModelSerializer):
+    """ Main websayt ning Homepage qismidagi Chorak g'oliblari qismi uchun API """
+
+    class Meta:
+        model =Quarter_winners
+        fields = ['photo', ]
 
 
 class MW_HPA_Teachers_Serializer(serializers.ModelSerializer):
