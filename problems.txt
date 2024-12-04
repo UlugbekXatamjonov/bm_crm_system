@@ -8,8 +8,7 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
-- Chorak g'oliblari qismi tugadi;
-- Teacher section uchun filter qo'yildi;
+
 
 
 /---------- Completed works -----------/
@@ -17,8 +16,7 @@ Loyihadagi muammolar:
 
 /---------- Works for next day -----------/
 
-- resut list uchun filter qo'yish kerak
-- hamma kamchiliklarni ko'rib chiqish
+- muammolar bilan to'ldirish | Studentga kelgan navbat
 - serverga kuylash
 
 - Qolgan API larni ham chiqarish kk

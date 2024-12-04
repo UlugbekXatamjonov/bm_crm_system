@@ -227,14 +227,24 @@ def mw_teachers_section_list(request):
         return Response({'error': f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: "}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+
 """ -------------- Result section API -------------- """
+class StudentCertificateFilter(filters.FilterSet):
+    science_name = filters.CharFilter(field_name='science__name', lookup_expr='icontains', label="Fan nomi")
+
+    class Meta:
+        model = Student_Certificate
+        fields = ['science_name']
+
+
 @throttle_classes([AnonRateThrottle])
 @api_view(['GET'])
 def mw_student_certificate_section_list(request):
     """
     Asosiy websaytning Natijalar bo'limi uchun API 
     So'rov turi: GET
-    
+
     Maydonlar:  
     first_name - o'quvchining ismi  
     last_name - o'quvchining familiyasi
@@ -246,15 +256,15 @@ def mw_student_certificate_section_list(request):
     """
     
     try:
-        certificates = Student_Certificate.objects.filter(status=True)
-        serializer = MW_Student_Certificate_Serializer(certificates, many=True)
-        
+        filterset = StudentCertificateFilter(request.GET, queryset=Student_Certificate.objects.filter(status=True))
+        if not filterset.is_valid():
+            return Response(filterset.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = MW_Student_Certificate_Serializer(filterset.qs, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
-        return Response({'error': f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: "}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
+    except Exception as e:
+        return Response({'error': f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
