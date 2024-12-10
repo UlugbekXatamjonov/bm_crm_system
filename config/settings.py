@@ -140,12 +140,20 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR.joinpath('static')
+    BASE_DIR.joinpath('static') 
 ]
 STATIC_ROOT = 'staticfiles'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = "media"
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = 'media/'
+
+MEDIA_URL = '/media/'  # Brauzer orqali kirish yo'li
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Serverda saqlanish joyi
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -166,7 +174,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '5/minute',
+        'anon': '60/minute',
         'user': '60/minute'
     },
     'DEFAULT_FILTER_BACKENDS': [

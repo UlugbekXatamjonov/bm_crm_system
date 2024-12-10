@@ -9,6 +9,7 @@ from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
 
 
+
 """ -------------- Home page API -------------- """
 class MW_HPA_Statistic_Data_Serializer(Serializer):
     """ Main websayt ning Homepage qismidagi Statistik ma'lumotlar uchun serializer """
@@ -118,6 +119,15 @@ class MW_Student_Certificate_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Student_Certificate
         fields = ['first_name', 'last_name', 'student_photo', 'science_name', 'name', 'photo', 'about']
+
+
+
+
+
+
+
+
+
 
 
 

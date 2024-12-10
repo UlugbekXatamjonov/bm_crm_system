@@ -19,8 +19,8 @@ urlpatterns = [
     
     # Sections paths
     path('teachers/', mw_teachers_section_list), 
-    path('results/', mw_student_certificate_section_list)
-    
+    path('results/', mw_student_certificate_section_list),
+
 ]
 
 

@@ -83,7 +83,7 @@ def mw_mainpage_sciences_list(request):
     
     try:    
         science = Science.objects.filter(status=True, is_mainpage=True)
-        serializer = MW_HPA_Science_Serializer(science, many=True)
+        serializer = MW_HPA_Science_Serializer(science, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     except:
@@ -103,7 +103,7 @@ def mw_mainpage_weekly_exam_photos_list(request):
     
     try:
         photos = Weeky_exam_photos.objects.filter(status=True)
-        serializer = MW_HPA_Weeky_Exam_Photos_Serializer(photos, many=True)
+        serializer = MW_HPA_Weeky_Exam_Photos_Serializer(photos, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     except:
@@ -122,7 +122,7 @@ def mw_mainpage_quarter_winners_list(request):
     """
     try:
         photos = Quarter_winners.objects.filter(status=True)
-        serializer = MW_HPA_Quarter_winners_Serializer(photos, many=True)
+        serializer = MW_HPA_Quarter_winners_Serializer(photos, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     except:
@@ -142,7 +142,7 @@ def mw_mainpage_teachers_list(request):
     photo - o'qtuvchining rasmi
     """
     try:
-        teachers = Teacher.objects.filter(user__status=True, is_mainpage=True) # Filtrlangan querysetni olish
+        teachers = Teacher.objects.filter(user__status=True, is_mainpage=True, context={'request': request}) # Filtrlangan querysetni olish
         serializer = MW_HPA_Teachers_Serializer(teachers, many=True) # Serializer orqali ma'lumotlarni formatlash
         
         return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
@@ -168,7 +168,7 @@ def mw_mainpage_students_certificate(request):
     """
     try:
         certificate = Student_Certificate.objects.filter(status=True, is_mainpage=True)
-        serializer = MW_HPA_Students_Certificate_Serializer(certificate, many=True)
+        serializer = MW_HPA_Students_Certificate_Serializer(certificate, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     except: 
@@ -190,7 +190,7 @@ class TeacherFilter(filters.FilterSet):
 
 @throttle_classes([AnonRateThrottle])
 @api_view(['GET'])
-def mw_teachers_section_list(request):
+def mw_teachers_section_list(request):  
     """
     Asosiy websaytning Teachers bo'limi uchun o'qtuvchilarning ro'yhatini uchun API
     So'rov turi: GET
@@ -220,7 +220,7 @@ def mw_teachers_section_list(request):
         if not filterset.is_valid(): # validatsiyadan o'tkazish
             return Response({'error': 'Filtr parametrlari noto\'g\'ri'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = MW_Teachers_Serializer(filterset.qs, many=True) # filterset.qs --> qs o'zgarmas key
+        serializer = MW_Teachers_Serializer(filterset.qs, many=True, context={'request': request}) # filterset.qs --> qs o'zgarmas key
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     except:
@@ -260,7 +260,7 @@ def mw_student_certificate_section_list(request):
         if not filterset.is_valid():
             return Response(filterset.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = MW_Student_Certificate_Serializer(filterset.qs, many=True)
+        serializer = MW_Student_Certificate_Serializer(filterset.qs, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:

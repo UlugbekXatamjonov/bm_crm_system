@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Father_and_Mother, Student_Certificate
+from .models import Student, Father_and_Mother, Student_Certificate 
 
 
 # @admin.register(Student_Certificate)
