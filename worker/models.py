@@ -53,7 +53,8 @@ class Teacher(models.Model):
     -experience: O'qtuvchining ish tajribasi.
     - is_class_leader: Sinf rahbari ekanligi.
     - is_mainpage: O'qtuvchi asosiy sahifadagi Teachers bo'limiga chiqish-chiqmasligi.
-    - class_group: Sinf guruhi bilan bog'langan.
+    - start_time: Ish boshlagan vaqti
+    
     """
     
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -64,6 +65,8 @@ class Teacher(models.Model):
     science = models.ForeignKey(Science, on_delete=models.CASCADE, related_name="teacher_science", verbose_name="Fan")
     dagree = models.CharField(max_length=50, verbose_name="Ma'lumoti", null=True, blank=True)
     experience = models.CharField(max_length=50, null=True, blank=True, verbose_name="Tajriba(yilda)")
+    start_time = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Ish boshlagan vaqti")
+    
     
     is_class_leader = models.BooleanField(default=False, verbose_name="Sinf rahbar")
     is_mainpage = models.BooleanField(default=False, blank=True, null=True, verbose_name="Asosiy sahifa")

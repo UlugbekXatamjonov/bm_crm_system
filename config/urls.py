@@ -62,11 +62,12 @@ urlpatterns = [
     # apps
     path('user/', include('users.urls')),
     path('main-website/', include('main_website.urls')),
+    path('worker/', include('worker.urls')),
 
 ]
-
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+
+
 

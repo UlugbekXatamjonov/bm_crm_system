@@ -1,12 +1,8 @@
 from django.urls import path
-from .views import TeacherListCreateAPIView, TeacherRetrieveUpdateDestroyAPIView, WorkerListCreateAPIView, WorkerRetrieveUpdateDestroyAPIView
+from .views import create_teacher_with_user
 
 urlpatterns = [
     # O'qituvchi URL'lari
-    path('teachers/<int:pk>/', TeacherRetrieveUpdateDestroyAPIView.as_view(), name='teacher-detail'),
-    path('teachers/', TeacherListCreateAPIView.as_view(), name='teacher-list-create'),
-
-    # Xodim URL'lari
-    path('workers/<int:pk>/', WorkerRetrieveUpdateDestroyAPIView.as_view(), name='worker-detail'),
-    path('workers/', WorkerListCreateAPIView.as_view(), name='worker-list-create'),
-]
+    path('teachers/create/', create_teacher_with_user, name='teacher-create'),
+    
+    ]

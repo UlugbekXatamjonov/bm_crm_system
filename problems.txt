@@ -6,12 +6,15 @@ Loyihadagi muammolar:
 - 
 
 
-
 /---------- Completed works -----------/
 
 
 
 /---------- Completed works -----------/
+
+
+
+
 
 
 /---------- Works for next day -----------/
@@ -23,3 +26,50 @@ Loyihadagi muammolar:
         
 /---------- Works for next day -----------/
 
+
+
+
+
+
+
+
+
+
+
+
+
+/--------------- Frontga ---------------/
+1) Teacher qo'shayotganda quidagicha API yuborish kerak 👇👇👇
+{
+    "user": {
+        "passport": "AA0000023",
+        "password": "password",
+        "first_name": "Ali 3",
+        "last_name": "Valiyev 3",
+        
+        "email": "teacher@example.com",
+        "date_of_bith": "1985-05-15",
+        "phone1": "+998990000018",
+        "phone2": "+998990000018",
+        "gender": "male",
+        "personal_status": "teacher",
+        "address": "Namangan, Yangi Namangan",
+        "status": true
+    },
+    "slug": "ali-valiyev",
+    "photo": null,
+    "passport_photo": null,
+    "salary": "2500000.00",
+    "science": 1,
+    "dagree": "Magistr",
+    "experience": "10 yil",
+    "start_time": "2023-01-01",
+    "is_class_leader": true,
+    "is_mainpage": false
+}
+
+
+
+
+
+/--------------- Frontga ---------------/ 
