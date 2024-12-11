@@ -3,29 +3,17 @@ from rest_framework import serializers
 from .models import Teacher, Worker
 from users.models import CustomUser
 
+from  users.serializers import CustomUser_Create_Serializer, CustomUser_List_Serializer
 
 
 """ --------------------- Teacher Section ---------------------  """
 
-class CustomUserSerializer(serializers.ModelSerializer):
-    """
-    OnetoOneField bog'lanish bo'yicha ulangan modellarda O'qtuvchi, Xodim, O'quvchi, Ota-ona ni qo'shish vaqtida,
-    CustomUser ni ham yaratib ketish uchun ushbu serializerdan foydalanildi.
-    """
-    
-    class Meta:
-        model = CustomUser
-        fields = ['passport', 'password', 'email', 'first_name', 'last_name', 'date_of_bith', 'phone1', 'phone2', 
-                    'gender', 'personal_status', 'address', 'status']
-
-
-
-class TeacherSerializer(serializers.ModelSerializer):
+class Teacher_Create_Serializer(serializers.ModelSerializer):
     """
     O'qtuvchi qo'shish uchun serializer.
     CustomUserSerializer() orqali bir vaqtning o'zida yangi User ham qo'shilib, u asosida Teacher obyetki ham qo'shiladi
     """
-    user = CustomUserSerializer()  # Yangi user qo'shish uchun CustomUser serializerini ishlatamiz
+    user = CustomUser_Create_Serializer()  # Yangi user qo'shish uchun CustomUser serializerini ishlatamiz
 
     class Meta:
         model = Teacher
@@ -42,9 +30,47 @@ class TeacherSerializer(serializers.ModelSerializer):
         teacher = Teacher.objects.create(user=user, **validated_data)  # Teacher obyekti yaratamiz
         
         return teacher
+    
+        
+class Teacher_List_Serializer(serializers.ModelSerializer):
+    """ O'qtuvchilar ro'yhari uchun Serializer """
+    
+    user = CustomUser_List_Serializer()  # Yangi user qo'shish uchun CustomUser serializerini ishlatamiz
+
+    science_name = serializers.CharField(source='science.name')
+    science_slug = serializers.CharField(source='science.slug')
+    
+    group_name_field = serializers.SerializerMethodField()
+    group_slug_field = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Teacher
+        fields = ['user', 'slug', 'photo', 'experience',
+                    'science_name', 'science_slug',
+                    'start_time', 'is_class_leader',
+                    'group_name_field', 'group_slug_field'
+                    ]
 
 
-
+    def get_group_name_field(self, obj):
+        """ O'qituvchining guruhining nomini qaytaradi """
+        
+        group_instance = obj.teacher_group.first()  # related_name orqali o'qtuvchining guruhlari ro'yxatidan 1-guruhini olamiz
+        
+        if group_instance: # agar o'qtuvchining sinfi bo'lsa
+            return group_instance.class_name # sinfning nomini qaytaramiz
+        else:
+            return None #Aks holda bo'sh qiymat qaytaramiz
+    
+    def get_group_slug_field(self, obj):
+        """ O'qituvchining guruhining slugini qaytaradi """
+        
+        group_instance = obj.teacher_group.first()  # related_name orqali o'qtuvchining guruhlari ro'yxatidan 1-guruhini olamiz
+        
+        if group_instance: # agar o'qtuvchining sinfi bo'lsa
+            return group_instance.slug # sinfning nomini qaytaramiz
+        else:
+            return None #Aks holda bo'sh qiymat qaytaramiz
 
 
 

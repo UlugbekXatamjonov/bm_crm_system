@@ -7,19 +7,29 @@ from rest_framework.throttling import AnonRateThrottle
 
 
 from .models import Teacher, Worker
-from .serializers import TeacherSerializer
+from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer
 
 
 
 
 """ -----------------  O'qtuvchilar uchun CRUD funksiyalari  ------------------- """
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_teachers(request):
+    """ O'qtuvchilar ro'yhatini qaytaradigan funksiya """
+    teachers = Teacher.objects.all()
+    serializer = Teacher_List_Serializer(teachers, many=True, context={'request':request})
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_teacher_with_user(request):
+def create_teacher(request):
     """ Yangi o'qituvchi va User qo'shish uchun funksiya. """
     
-    serializer = TeacherSerializer(data=request.data)
+    serializer = Teacher_Create_Serializer(data=request.data)
     if serializer.is_valid():
         serializer.save()        
         return Response(

@@ -7,7 +7,8 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
-
+-O'qtuvchilar ro'yhati uchun API tayyorlandi;
+-
 
 
 /---------- Completed works -----------/
@@ -19,8 +20,7 @@ Loyihadagi muammolar:
 
 /---------- Works for next day -----------/
 
-- muammolar bilan to'ldirish | Studentga kelgan navbat
-- serverga kuylash
+- Sinflarni yangisi bilan almashtirib chiqish;
 
 - Qolgan API larni ham chiqarish kk
         

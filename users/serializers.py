@@ -163,8 +163,34 @@ class UserPasswordResetSerializer(serializers.Serializer):
             raise serializers.ValidationError('Token is not Valid or Expired')
      
   
-      
-      
+  
+  
+""" ---------------- Serialization for User ---------------- """
+  
+class CustomUser_Create_Serializer(serializers.ModelSerializer):
+  """
+  OnetoOneField bog'lanish bo'yicha ulangan modellarda O'qtuvchi, Xodim, O'quvchi, Ota-ona ni qo'shish vaqtida,
+  CustomUser ni ham yaratib ketish uchun ushbu serializerdan foydalanildi.
+  """
+  
+  class Meta:
+      model = CustomUser
+      fields = ['passport', 'password', 'email', 'first_name', 'last_name', 'date_of_bith', 'phone1', 'phone2', 
+                  'gender', 'personal_status', 'address', 'status']
+
+
+class CustomUser_List_Serializer(serializers.ModelSerializer):
+  """
+  OnetoOneField bog'lanish bo'yicha ulangan modellarda O'qtuvchi, Xodim, O'quvchi, Ota-ona ning malumotlarini olish
+    uchun ushbu serializerdan foydalanildi.
+  """
+  
+  class Meta:
+      model = CustomUser
+      fields = ['passport', 'first_name', 'last_name', 'date_of_bith', 'phone1', 'phone2', 
+                  'gender', 'personal_status', 'status']
+
+    
       
       
       

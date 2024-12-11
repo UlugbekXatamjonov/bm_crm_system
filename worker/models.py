@@ -47,7 +47,6 @@ class Teacher(models.Model):
     - slug: slug_funckion_for_teacher funksiyasi asosida olingan slug joylashgan maydon.
     - photo: O'qtuvchining rasmi.
     - passport_photo: O'qtuvchining passporti rasmi. 
-    - salary: O'qituvchining maoshi.
     - science: O'qituvchining o'qitadigan fani.
     - dagree: O'qtuvchining ma'lumoti/darajasi.
     -experience: O'qtuvchining ish tajribasi.
@@ -61,7 +60,7 @@ class Teacher(models.Model):
     slug = AutoSlugField((u'slug'), populate_from=slug_funckion_for_teacher, unique=True)
     photo = models.ImageField(upload_to=teacher_directory_path, null=True, blank=True, verbose_name="Rasm")
     passport_photo = models.ImageField(upload_to=teacher_directory_path, null=True, blank=True, verbose_name="Passport rasmi")
-    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
+    # salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
     science = models.ForeignKey(Science, on_delete=models.CASCADE, related_name="teacher_science", verbose_name="Fan")
     dagree = models.CharField(max_length=50, verbose_name="Ma'lumoti", null=True, blank=True)
     experience = models.CharField(max_length=50, null=True, blank=True, verbose_name="Tajriba(yilda)")
@@ -129,14 +128,13 @@ class Worker(models.Model):
     - user: Foydalanuvchi modeliga bog'langan.
     - position: Xodimning lavozimi.
     - is_superadmin: Superadmin ekanligini belgilash.
-    - salary: Xodimning maoshi.
     """
     
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to=worker_directory_path, null=True, blank=True, verbose_name="Rasm")
     # position = models.CharField(max_length=100, choices=WORKER_POSITION, default='worker', verbose_name="Lavozim")
     is_superadmin = models.BooleanField(default=False, verbose_name="Tizimga kirish huquqi")
-    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
+    # salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Maosh")
 
     def __str__(self):
         return f"{self.user.get_full_name()}"
