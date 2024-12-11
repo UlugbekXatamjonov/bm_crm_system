@@ -7,7 +7,7 @@ from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia
 from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
-
+from .models import Announcement
 
 
 """ -------------- Home page API -------------- """
@@ -122,8 +122,13 @@ class MW_Student_Certificate_Serializer(serializers.ModelSerializer):
 
 
 
+""" -------------- Announcement section API -------------- """
+class Announcement_Serializer(serializers.ModelSerializer):
+    """" E'lonlar bo'limi uchun serializer """
 
-
+    class Meta:
+        model = Announcement
+        fields = ['name', 'slug', 'about', 'photo', 'created_on']
 
 
 

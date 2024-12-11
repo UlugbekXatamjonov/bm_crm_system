@@ -7,8 +7,8 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
--O'qtuvchilar ro'yhati uchun API tayyorlandi;
--
+-statistikada faqat O'qtuvchilar soni chiqadigan bo'ldi;
+-yangi Announcement(E'lonlar) modeli va List API chiqdi
 
 
 /---------- Completed works -----------/
@@ -21,6 +21,10 @@ Loyihadagi muammolar:
 /---------- Works for next day -----------/
 
 - Sinflarni yangisi bilan almashtirib chiqish;
+- elonlar bo'lida ditail bo'lishi kk
+- rasmlarni sluguga sana qo'shish kk bazilariga 
+- O'qtuvchini tajribasini o'sadigan qilish kk
+- home pageda result qismida student_photo da rasmni urli to'liq chiqmayapdi
 
 - Qolgan API larni ham chiqarish kk
         

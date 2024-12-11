@@ -17,12 +17,12 @@ from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia, Wor
 from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
+from .models import Announcement
 
 
 from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
     MW_HPA_Students_Certificate_Serializer, MW_Student_Certificate_Serializer, MW_HPA_Science_Serializer,\
-    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer
-
+    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Announcement_Serializer
 
 
 
@@ -46,7 +46,7 @@ def mw_mainpage_statistic_datas(request):
         yearly_experiense = datetime.now().year - 2023 # yil o'tgani sari o'zgaruvchi qiymati aftomatik oshib boradi
         students_count = Student.objects.filter(user__status=True).count()
         banchs_count = 2 # ❗❗❗ Bu o'zgaruvchi "qo'lda" o'zgartiriladi ❗❗❗ 
-        teachers_count = Teacher.objects.filter(user__status=True).count() + Worker.objects.filter(user__status=True).count()
+        teachers_count = Teacher.objects.filter(user__status=True).count()
         
         data = [{
             "yearly_experiense" : yearly_experiense,
@@ -142,8 +142,8 @@ def mw_mainpage_teachers_list(request):
     photo - o'qtuvchining rasmi
     """
     try:
-        teachers = Teacher.objects.filter(user__status=True, is_mainpage=True, context={'request': request}) # Filtrlangan querysetni olish
-        serializer = MW_HPA_Teachers_Serializer(teachers, many=True) # Serializer orqali ma'lumotlarni formatlash
+        teachers = Teacher.objects.filter(user__status=True, is_mainpage=True) # Filtrlangan querysetni olish
+        serializer = MW_HPA_Teachers_Serializer(teachers, many=True, context={'request': request}) # Serializer orqali ma'lumotlarni formatlash
         
         return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
     except:
@@ -268,3 +268,15 @@ def mw_student_certificate_section_list(request):
 
 
 
+""" -------------- Announcement section API -------------- """
+@throttle_classes([AnonRateThrottle])
+@api_view(['GET'])
+def announcement_list(request):
+    """ E'lonlar bo'limi uchun API """
+    
+    announcements = Announcement.objects.filter(status=True)
+    serializer = Announcement_Serializer(announcements, many=True, context={'request': request})
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
