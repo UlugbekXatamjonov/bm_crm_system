@@ -272,11 +272,48 @@ def mw_student_certificate_section_list(request):
 @throttle_classes([AnonRateThrottle])
 @api_view(['GET'])
 def announcement_list(request):
-    """ E'lonlar bo'limi uchun API """
+    """ E'lonlar bo'limi uchun API ro'yhati 
+        name - E'lon nomi
+        slug - bitta e'longa kirish uchun kalit
+        about - e'lon matni
+        photo - e'lon rasm
+        created_on - e'lon yozilgan vaqti
+    """
     
-    announcements = Announcement.objects.filter(status=True)
-    serializer = Announcement_Serializer(announcements, many=True, context={'request': request})
+    try:
+        announcements = Announcement.objects.filter(status=True)
+        serializer = Announcement_Serializer(announcements, many=True, context={'request': request})
+    
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':""})
+    
+    
+@throttle_classes([AnonRateThrottle])
+@api_view(['GET'])    
+def announcement_detail(request, slug):
+    """  E'lonlar bo'limida yakka e'longa kirish uchun API 
+        name - E'lon nomi
+        slug - bitta e'longa kirish uchun kalit
+        about - e'lon matni
+        photo - e'lon rasm
+        created_on - e'lon yozilgan vaqti
+    """
+    
+    announcement = Announcement.objects.filter(status=True, slug=slug)
+    serializer = Announcement_Serializer(announcement, many=True, context={'request':request})
     
     return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     

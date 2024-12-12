@@ -23,7 +23,10 @@ class Announcement(models.Model): # Announcement - E'lon
     created_on = models.DateTimeField(auto_now_add=True)
     
 
+    class Meta:
+        verbose_name = "E'lon"
+        verbose_name_plural = "E'lonlar"
 
-
-
+    def __str__(self):
+        return self.name
 

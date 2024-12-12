@@ -125,6 +125,7 @@ class MW_Student_Certificate_Serializer(serializers.ModelSerializer):
 """ -------------- Announcement section API -------------- """
 class Announcement_Serializer(serializers.ModelSerializer):
     """" E'lonlar bo'limi uchun serializer """
+    created_on = serializers.DateTimeField(format="%Y-%m-%d | %H:%M:%S")  # Sana va vaqtga format belgilash
 
     class Meta:
         model = Announcement

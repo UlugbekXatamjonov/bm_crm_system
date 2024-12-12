@@ -7,10 +7,7 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
-
-- Sinflarni yangisi bilan almashtirib chiqildi;
-- rasmlarni sluguga sana qo'shildi
-- home pageda result qismida student_photo da rasmni urli to'liq chiqmayapdi
+- elonlar bo'lmida ditail bo'lishi kk
 
 
 /---------- Completed works -----------/
@@ -19,7 +16,6 @@ Loyihadagi muammolar:
 
 /---------- Works for next day -----------/
 
-- elonlar bo'lmida ditail bo'lishi kk
 - O'qtuvchini tajribasini o'sadigan qilish kk
 
 - Qolgan API larni ham chiqarish kk
