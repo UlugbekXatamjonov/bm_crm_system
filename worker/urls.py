@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import create_teacher, list_teachers
+from .views import teacher_create, teachers_list, teacher_detail
 
 urlpatterns = [
     # O'qituvchi URL'lari
-    path('teachers/list/', list_teachers, name='teacher-list'),
-    path('teachers/create/', create_teacher, name='teacher-create'),
+    path('teachers/list/', teachers_list, name='teacher-list'),
+    path('teachers/<slug:slug>/', teacher_detail, name='teacher-detail'),
+    path('teachers/create/', teacher_create, name='teacher-create'),
     
     ]

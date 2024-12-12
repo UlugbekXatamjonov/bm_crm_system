@@ -7,7 +7,8 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
-- elonlar bo'lmida ditail bo'lishi kk
+-O'qtuvchilar uchun detail page API lari shakillantirldi;
+-Teacher_Sertificate va Teacher_Social_Madia modellariga slug maydoni qo'shildi, realeted_name o'zgardi;
 
 
 /---------- Completed works -----------/
@@ -16,7 +17,15 @@ Loyihadagi muammolar:
 
 /---------- Works for next day -----------/
 
+-Teacher list bo'limida jami o'quvchilarni(active va deactive holatidagilarni alohi) sonini chiqarish kk
+- Teacher listga filter qo'yish kk:
+    - fan 
+    - jinsi(erkak/ayol)
+    - is_class_leader
+    - is_mainpage
+
 - O'qtuvchini tajribasini o'sadigan qilish kk
+- detail pagida  maktabdagi staj vaqtini  chiqarish kk;
 
 - Qolgan API larni ham chiqarish kk
         
@@ -63,9 +72,6 @@ Loyihadagi muammolar:
     "is_class_leader": true,
     "is_mainpage": false
 }
-
-
-
 
 
 /--------------- Frontga ---------------/ 

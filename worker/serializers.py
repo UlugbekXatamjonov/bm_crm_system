@@ -1,12 +1,28 @@
 from rest_framework import serializers
 
-from .models import Teacher, Worker
 from users.models import CustomUser
+from users.serializers import CustomUser_Create_Serializer, CustomUser_List_Serializer
 
-from  users.serializers import CustomUser_Create_Serializer, CustomUser_List_Serializer
+from .models import Teacher, Worker, Teacher_Certificate, Teacher_SocialMedia
+
 
 
 """ --------------------- Teacher Section ---------------------  """
+class Teacher_Certificate_Serializer(serializers.ModelSerializer):
+    """ O'qtuvchining sertifikatlari uchun serializer """
+
+    class Meta:
+        model = Teacher_Certificate
+        fields = ['name', 'slug']
+
+
+class Teacher_SM_Serializer(serializers.ModelSerializer):
+    """ O'qtuvchining sertifikatlari uchun serializer """
+
+    class Meta:
+        model = Teacher_SocialMedia
+        fields = ['name', 'slug']
+
 
 class Teacher_Create_Serializer(serializers.ModelSerializer):
     """
@@ -45,11 +61,7 @@ class Teacher_List_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = ['user', 'slug', 'photo', 'experience',
-                    'science_name', 'science_slug',
-                    'start_time', 'is_class_leader',
-                    'group_name_field', 'group_slug_field'
-                    ]
+        fields = ['user', 'slug', 'photo', 'science_name', 'science_slug', 'is_class_leader', 'group_name_field', 'group_slug_field']
 
 
     def get_group_name_field(self, obj):
@@ -72,6 +84,49 @@ class Teacher_List_Serializer(serializers.ModelSerializer):
         else:
             return None #Aks holda bo'sh qiymat qaytaramiz
 
+
+class Teacher_Detail_Serializer(serializers.ModelSerializer):
+    """ Birdona o'qtuvchining ma'lumotlarini chiqarish uchun serializer """
+
+    user = CustomUser_List_Serializer()
+    teacher_certificate = Teacher_Certificate_Serializer(many=True, read_only=True)
+    teacher_sm = Teacher_SM_Serializer(many=True, read_only=True)
+
+    science_name = serializers.CharField(source='science.name')
+    science_slug = serializers.CharField(source='science.slug')
+    
+    group_name = serializers.SerializerMethodField()
+    group_slug = serializers.SerializerMethodField()
+    
+    
+    class Meta:
+        model = Teacher
+        fields = ["user", "slug", "photo", "passport_photo", "dagree", "experience", "start_time", 
+                    "science_name", "science_slug", "group_name", "group_slug",   
+                    "is_class_leader", "is_mainpage",
+                    "teacher_certificate", "teacher_sm"
+                ]
+
+    
+    def get_group_name(self, obj):
+        """ O'qituvchining guruhining nomini qaytaradi """
+        
+        group_instance = obj.teacher_group.first()  # related_name orqali o'qtuvchining guruhlari ro'yxatidan 1-guruhini olamiz
+        
+        if group_instance: # agar o'qtuvchining sinfi bo'lsa
+            return group_instance.class_name # sinfning nomini qaytaramiz
+        else:
+            return None #Aks holda bo'sh qiymat qaytaramiz
+    
+    def get_group_slug(self, obj):
+        """ O'qituvchining guruhining slugini qaytaradi """
+        
+        group_instance = obj.teacher_group.first()  # related_name orqali o'qtuvchining guruhlari ro'yxatidan 1-guruhini olamiz
+        
+        if group_instance: # agar o'qtuvchining sinfi bo'lsa
+            return group_instance.slug # sinfning nomini qaytaramiz
+        else:
+            return None #Aks holda bo'sh qiymat qaytaramiz
 
 
 

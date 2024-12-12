@@ -7,7 +7,7 @@ from rest_framework.throttling import AnonRateThrottle
 
 
 from .models import Teacher, Worker
-from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer
+from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer, Teacher_Detail_Serializer
 
 
 
@@ -15,18 +15,35 @@ from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer
 """ -----------------  O'qtuvchilar uchun CRUD funksiyalari  ------------------- """
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def list_teachers(request):
+def teachers_list(request):
     """ O'qtuvchilar ro'yhatini qaytaradigan funksiya """
-    teachers = Teacher.objects.all()
-    serializer = Teacher_List_Serializer(teachers, many=True, context={'request':request})
+    
+    try:
+        teachers = Teacher.objects.all()
+        serializer = Teacher_List_Serializer(teachers, many=True, context={'request':request})
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Ma'lumotlarni qayta ishlashhda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+    
+
+
+@throttle_classes([AnonRateThrottle])
+@api_view(["GET"])    
+def teacher_detail(request, slug):
+    """ Birdona o'qtuvchining ma'lumotlarini chiqarish uchun API """
+
+    teacher = Teacher.objects.filter(slug=slug)
+    serializer = Teacher_Detail_Serializer(teacher, many=True, context={'request':request})
     
     return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_teacher(request):
+def teacher_create(request):
     """ Yangi o'qituvchi va User qo'shish uchun funksiya. """
     
     serializer = Teacher_Create_Serializer(data=request.data)

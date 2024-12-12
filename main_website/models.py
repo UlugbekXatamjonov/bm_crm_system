@@ -1,6 +1,6 @@
 from django.db import models
 
-from autoslug import AutoSlugField
+from autoslug import AutoSlugField # type: ignore
 
 # Create your models here.
 

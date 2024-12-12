@@ -31,11 +31,22 @@ def worker_directory_path(instance, filename):
 
 
 
-""" Teachernign slugi uchun funksi """
+""" Teacherning slugi uchun funksi """
+""" Ikkita maydonni slugda birlashtirish """
 def slug_funckion_for_teacher(self):
-        """ Ikkita maydonni slugda birlashtirish """
-        
-        return "{}-{}".format(self.user.first_name, self.user.last_name)
+    """ O'qtuvchi uchun slugda uning ism va familiyasini birlashtirish uchun funksiya """        
+
+    return "{}-{}".format(self.user.first_name, self.user.last_name)
+
+def slug_funckion_for_teacher_certificate(self):
+    """ O'qtuvchining sertifikati modelidagi  slug maydonida uning ismi familiyasi va sertifikat nomini birlashtiruvchi funksiya """
+    
+    return "{}-{}-{}".format(self.teacher_name.user.first_name, self.teacher_name.user.last_name, self.name)
+
+def slug_funckion_for_teacher_social_media(self):
+    """ O'qtuvchining Social Media modelidagi  slug maydonida uning ismi familiyasi va sertifikat nomini birlashtiruvchi funksiya """
+    
+    return "{}-{}-{}".format(self.teacher_name.user.first_name, self.teacher_name.user.last_name, self.name)
 
 
 
@@ -83,8 +94,9 @@ class Teacher_Certificate(models.Model):
         - photo: Sertifikat rasmi.
     """
     
-    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_certificate', verbose_name="O'qtuvchi")
+    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_certificates', verbose_name="O'qtuvchi")
     name = models.CharField(max_length=250, verbose_name="Sertifikat nomi")
+    slug = AutoSlugField(populate_from=slug_funckion_for_teacher_certificate, unique=True, null=True, blank=True)
     photo = models.ImageField(upload_to=teacher_certificate_directory_path, verbose_name="Rasmi")
     
     class Meta:
@@ -115,8 +127,9 @@ class Teacher_SocialMedia(models.Model):
         ('blog2','Blog 2'),
     )
     
-    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_sm', verbose_name="O'qtuvchi")
+    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_sms', verbose_name="O'qtuvchi")
     name = models.CharField(max_length=50, choices=SM, verbose_name="Nomi")
+    slug = AutoSlugField(populate_from=slug_funckion_for_teacher_social_media, unique=True, null=True, blank=True)
     url = models.CharField(max_length=250, verbose_name="URL")
    
    
@@ -138,5 +151,9 @@ class Worker(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()}"
+
+
+
+
 
 
