@@ -61,7 +61,7 @@ class MW_HPA_Students_Certificate_Serializer(serializers.ModelSerializer):
     
     first_name = serializers.CharField(source='student.user.first_name')
     last_name = serializers.CharField(source='student.user.last_name')
-    student_photo = serializers.CharField(source='student.photo')
+    student_photo = serializers.ImageField(source='student.photo')
     science_name = serializers.CharField(source='science.name')
     
     class Meta:

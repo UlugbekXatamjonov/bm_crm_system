@@ -16,6 +16,10 @@ class Group(models.Model):
     slug = AutoSlugField(populate_from='class_name', unique=True, null=True, blank=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, blank=True, related_name='teacher_group', verbose_name="Sinf rahbar")
 
+    class Meta:
+        verbose_name = "Sinf"
+        verbose_name_plural = "Sinflar"
+
     def __str__(self):
         return self.class_name
     

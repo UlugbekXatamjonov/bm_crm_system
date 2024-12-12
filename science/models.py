@@ -10,7 +10,7 @@ class Science(models.Model):
     """ Fanlar uchun model """
     name = models.CharField(max_length=250, verbose_name="Fan nomi")
     slug = AutoSlugField(populate_from='name', unique=True)
-    photo = models.ImageField(upload_to='science_photos/', verbose_name="Rasm")
+    photo = models.ImageField(upload_to='science_photos/%Y/%m/', verbose_name="Rasm")
     about = models.TextField(blank=True, null=True, verbose_name="Fan haqida")
     
     
