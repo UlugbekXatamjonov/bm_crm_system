@@ -1,10 +1,11 @@
 from rest_framework import status
-from rest_framework import filters
+# from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, throttle_classes, permission_classes
 from rest_framework.throttling import AnonRateThrottle
 
+from django_filters import rest_framework as filters # type: ignore
 
 from .models import Teacher, Worker
 from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer, Teacher_Detail_Serializer
@@ -13,16 +14,33 @@ from .serializers import Teacher_Create_Serializer, Teacher_List_Serializer, Tea
 
 
 """ -----------------  O'qtuvchilar uchun CRUD funksiyalari  ------------------- """
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def teachers_list(request):
-    """ O'qtuvchilar ro'yhatini qaytaradigan funksiya """
+class Teacher_list_filters(filters.FilterSet):
+    """ O'qituvchilar bo'limi uchun filterlar. """
     
+    science = filters.CharFilter(field_name='science__name', lookup_expr='icontains', label="Fan nomi")
+    # ❗ Agar modelda CharField maydoni da choises ishlatilgan bo'lsa, filterlshda  lookup_expr='exact' bo'lishi shart
+    gender = filters.CharFilter(field_name='user__gender', lookup_expr='exact', label="Jinsi") 
+    is_class_leader = filters.BooleanFilter(field_name='is_class_leader', label="Sinf rahbarligi") 
+    is_mainpage = filters.BooleanFilter(field_name='is_mainpage', label="Asosiy saytda chiqishi") 
+
+    class Meta:
+        model = Teacher
+        fields = ["science", "gender", "is_class_leader", "is_mainpage"]
+
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def teachers_list(request):
+    """ O'qituvchilar ro'yhatini qaytaradigan funksiya """
     try:
-        teachers = Teacher.objects.all()
-        serializer = Teacher_List_Serializer(teachers, many=True, context={'request':request})
+        filterset = Teacher_list_filters(request.GET, queryset=Teacher.objects.all())
+        if not filterset.is_valid():
+            return Response(filterset.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        serializer = Teacher_List_Serializer(filterset.qs, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+        
     except:
         return Response({'error':"Ma'lumotlarni qayta ishlashhda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
     

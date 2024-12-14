@@ -12,19 +12,15 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
+- Teacher listga filter qo'yildi
 
 
 
 /---------- Works for next day -----------/
 
--Teacher list bo'limida jami o'quvchilarni(active va deactive holatidagilarni alohi) sonini chiqarish kk
-- Teacher listga filter qo'yish kk:
-    - fan 
-    - jinsi(erkak/ayol)
-    - is_class_leader
-    - is_mainpage
-
 - O'qtuvchini tajribasini o'sadigan qilish kk
+
+-Teacher list bo'limida jami o'quvchilarni(active va deactive holatidagilarni alohida) sonini chiqarish kk ❗ J bn gaplash
 - detail pagida  maktabdagi staj vaqtini  chiqarish kk;
 
 - Qolgan API larni ham chiqarish kk
