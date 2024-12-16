@@ -17,12 +17,14 @@ from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia, Wor
 from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
-from .models import Announcement
+
+from .models import Announcement, Contact_us, Parents_opinion
 
 
 from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
     MW_HPA_Students_Certificate_Serializer, MW_Student_Certificate_Serializer, MW_HPA_Science_Serializer,\
-    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Announcement_Serializer
+    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Announcement_Serializer, Contact_us_Serializer,\
+    MW_HPA_Parents_opinion_Certificate_Serializer
 
 
 
@@ -175,6 +177,26 @@ def mw_mainpage_students_certificate(request):
         return Response({'error': "Ma'lumotlarni to'plashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
         
 
+@api_view(["GET"])
+@throttle_classes({AnonRateThrottle})
+def mw_mainpage_parents_opinion(request):
+    """ Ota-onalar fikri uchun API 
+    So'rov turi: GET
+    Maydonlar:
+    name - ota-ona ismi
+    opinion - fikr matni
+    photo - rasm
+    """
+    
+    try:
+        opinons = Parents_opinion.objects.filter(status=True)
+        serializer = MW_HPA_Parents_opinion_Certificate_Serializer(opinons, many=True, context={'request':request})
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({"error":"Ma'lumotlarni qayta ishlashda hatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+    
+
 
 
 """ -------------- Teacher section API -------------- """
@@ -306,9 +328,27 @@ def announcement_detail(request, slug):
     return Response(serializer.data, status=status.HTTP_200_OK)
     
     
+
+""" -------------- Contact us section API -------------- """
+@api_view(['POST'])
+@throttle_classes([AnonRateThrottle])
+def teacher_create(request):
+    """ Yangi xabar qo'shish uchun funksiya. 
+    So'rob turi: POST
+    Maydonlar:
+    name - ism familiya 
+    phone - telefon raqam
+    """
     
-    
-    
+    serializer = Contact_us_Serializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()        
+        return Response(
+            {'data':f"Xabaringiz muvaffaqiyatli yuborildi !"}, status=status.HTTP_201_CREATED)
+        
+    return Response({'error':"Ma'lumotlarni tuborishda xatolik yuzaga keldi"}, status=status.HTTP_400_BAD_REQUEST)
+
+
     
     
     

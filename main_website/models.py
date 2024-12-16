@@ -33,9 +33,10 @@ class Announcement(models.Model): # Announcement - E'lon
 
 
 class Parents_opinion(models.Model):
-    """ Ota-onalar fikri """
+    """ Ota-onalar fikri uchun model """
     
     name = models.CharField(max_length=250, verbose_name="Ismi")
+    slug = AutoSlugField(populate_from="name", unique = True)
     opinion = models.TextField(verbose_name="Fikr")
     photo = models.ImageField(upload_to='parents_opinion/', 
                               default='D:/projects/my_projects/bm_crm_system/media/default_pictures/person.png', 
@@ -57,6 +58,7 @@ class Contact_us(models.Model):
     """ Biz bilan bog'laning sahifasi uchun model """
 
     name = models.CharField(max_length=250, verbose_name="Ismi")
+    slug = AutoSlugField(populate_from="name", unique = True)
     phone = models.CharField(max_length=50, verbose_name="Telefon raqam")
     
     status = models.BooleanField(default=False, verbose_name="Holati")

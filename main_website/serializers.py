@@ -7,7 +7,8 @@ from worker.models import Teacher, Teacher_Certificate, Teacher_SocialMedia
 from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
-from .models import Announcement
+
+from .models import Announcement, Parents_opinion, Contact_us
 
 
 """ -------------- Home page API -------------- """
@@ -68,6 +69,15 @@ class MW_HPA_Students_Certificate_Serializer(serializers.ModelSerializer):
         model = Student_Certificate
         fields = ['first_name', 'last_name', 'student_photo', 'science_name', 'name', 'photo', 'about']
 
+
+class MW_HPA_Parents_opinion_Certificate_Serializer(serializers.ModelSerializer):
+    """ Ota-onalar fikri bo'limi uchun serializer """
+    
+    class Meta:
+        model = Parents_opinion
+        fields = ['name', 'opinion', 'photo']
+    
+    
 
 """ -------------- Teacher section API -------------- """
 class MW_Teacher_Social_media_Serializer(serializers.ModelSerializer):
@@ -132,6 +142,14 @@ class Announcement_Serializer(serializers.ModelSerializer):
         fields = ['name', 'slug', 'about', 'photo', 'created_on']
 
 
+
+""" -------------- Contact_us section API -------------- """
+class Contact_us_Serializer(serializers.ModelSerializer):
+    """ Biz bilan bog'laning bo'limi uchun serializer """
+    
+    class Meta:
+        model = Contact_us
+        fields = ['name', 'phone']           
 
 
 

@@ -6,18 +6,18 @@ Loyihadagi muammolar:
 - 
 
 
-/---------- Completed works -----------/
--Parents_opinion va Contact_us modellari yasaldi;
+/--------------------------------------- Completed works ---------------------------------------/
+-Parents_opinion va Contact_us modellariga slug maydoni qo'shildi;
+-Asosiy sahifaga ota onlar fikri uchun API chiqdi;
+-Contact us sahifasi uchun API chiqdi;
 
-/---------- Completed works -----------/
+/--------------------------------------- Completed works ---------------------------------------/
 
 
 
-/---------- Works for next day -----------/
 
-Mainn websitega asosiy sahifaga ota onlar fikrini qo'shish
+/--------------------------------------- Works for next day -----------------------------------/
 
-Contact us sahifasiga API
 
 statistikaga qo'shish kerak: bitiruvchilar va o'qishga kirganlar soni va % is:
 
@@ -34,7 +34,8 @@ Bitiruvchiklarimzi sahifasi
 
 - Qolgan API larni ham chiqarish kk
         
-/---------- Works for next day -----------/
+/--------------------------------------- Works for next day -----------------------------------/
+
 
 
 
@@ -48,21 +49,13 @@ Muzaffar aka:
 
 
 
-"""
+""
 
 
 
 
 
-
-
-
-
-
-
-
-
-/--------------- Frontga ---------------/
+/------------------------------------------------ Frontga ------------------------------------------/
 1) Teacher qo'shayotganda quidagicha API yuborish kerak 👇👇👇
 {
     "user": {
@@ -93,4 +86,4 @@ Muzaffar aka:
 }
 
 
-/--------------- Frontga ---------------/ 
+/------------------------------------------------ Frontga ------------------------------------------/ 
