@@ -7,16 +7,25 @@ Loyihadagi muammolar:
 
 
 /---------- Completed works -----------/
--O'qtuvchilar uchun detail page API lari shakillantirldi;
--Teacher_Sertificate va Teacher_Social_Madia modellariga slug maydoni qo'shildi, realeted_name o'zgardi;
-
+-Parents_opinion va Contact_us modellari yasaldi;
 
 /---------- Completed works -----------/
-- Teacher listga filter qo'yildi
 
 
 
 /---------- Works for next day -----------/
+
+Mainn websitega asosiy sahifaga ota onlar fikrini qo'shish
+
+Contact us sahifasiga API
+
+statistikaga qo'shish kerak: bitiruvchilar va o'qishga kirganlar soni va % is:
+
+Bitiruvchiklarimzi sahifasi
+    rasm insitut  nomi
+    bitirgan yili
+    statistika()
+
 
 - O'qtuvchini tajribasini o'sadigan qilish kk
 
@@ -26,6 +35,20 @@ Loyihadagi muammolar:
 - Qolgan API larni ham chiqarish kk
         
 /---------- Works for next day -----------/
+
+
+
+"""
+Muzaffar aka:
+-iconic dan oylik to'lov olish kk:
+-Saytni rangini o'zgartirish;
+-maktabni 3D si
+-bituvchilar qismi ni qo'shish
+
+
+
+
+"""
 
 
 
