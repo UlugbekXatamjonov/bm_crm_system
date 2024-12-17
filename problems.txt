@@ -7,21 +7,17 @@ Loyihadagi muammolar:
 
 
 /--------------------------------------- Completed works ---------------------------------------/
--Bitiruvchilar uchun Graduation_year va Graduate modellari qo'shildi
+
+-mw_mainpage_statistic_datas funksiyasiga o'zgartirish kiritildi: Bitiruvchilar statistikasi qo'shildi.
 
 /--------------------------------------- Completed works ---------------------------------------/
 
 
 
-
 /--------------------------------------- Works for next day -----------------------------------/
 
-statistikaga qo'shish kerak: bitiruvchilar va o'qishga kirganlar soni va % is:
 
-Bitiruvchilarimiz sahifasi
-    rasm insitut  nomi
-    bitirgan yili
-    statistika()
+Bitiruvchilarimiz sahifasiga ma'lumot chiqarish:  + bitirgan yili, statistika
 
 o'quvchilar statusini o;zgartirish:
     -active
@@ -89,3 +85,4 @@ Muzaffar aka:
 
 
 /------------------------------------------------ Frontga ------------------------------------------/ 
+
