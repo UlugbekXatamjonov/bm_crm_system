@@ -7,9 +7,7 @@ Loyihadagi muammolar:
 
 
 /--------------------------------------- Completed works ---------------------------------------/
--Parents_opinion va Contact_us modellariga slug maydoni qo'shildi;
--Asosiy sahifaga ota onlar fikri uchun API chiqdi;
--Contact us sahifasi uchun API chiqdi;
+-Bitiruvchilar uchun Graduation_year va Graduate modellari qo'shildi
 
 /--------------------------------------- Completed works ---------------------------------------/
 
@@ -18,14 +16,18 @@ Loyihadagi muammolar:
 
 /--------------------------------------- Works for next day -----------------------------------/
 
-
 statistikaga qo'shish kerak: bitiruvchilar va o'qishga kirganlar soni va % is:
 
-Bitiruvchiklarimzi sahifasi
+Bitiruvchilarimiz sahifasi
     rasm insitut  nomi
     bitirgan yili
     statistika()
 
+o'quvchilar statusini o;zgartirish:
+    -active
+    -deactive
+    -graduate
+    -no_stater
 
 - O'qtuvchini tajribasini o'sadigan qilish kk
 
