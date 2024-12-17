@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from datetime import datetime
+from django.db.models import Sum
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, throttle_classes
@@ -9,7 +11,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from datetime import datetime
 from django_filters import rest_framework as filters # type: ignore
 
 
@@ -18,7 +19,7 @@ from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
 
-from .models import Announcement, Contact_us, Parents_opinion
+from .models import Announcement, Contact_us, Parents_opinion, Graduate, Graduation_year
 
 
 from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
@@ -42,7 +43,10 @@ def mw_mainpage_statistic_datas(request):
     students_count - o'quvchilar soni
     banchs_count - filiallar soni
     teachers_count - o'qtuvchilar soni
-    """
+    graduates - Bitiruvchilar soni
+    enrollees - O'qishga kirganlar soni
+    enrollment_rate - O'qishga kirish foizi
+    """ 
     
     try:
         yearly_experiense = datetime.now().year - 2023 # yil o'tgani sari o'zgaruvchi qiymati aftomatik oshib boradi
@@ -50,16 +54,28 @@ def mw_mainpage_statistic_datas(request):
         banchs_count = 2 # ❗❗❗ Bu o'zgaruvchi "qo'lda" o'zgartiriladi ❗❗❗ 
         teachers_count = Teacher.objects.filter(user__status=True).count()
         
+        # Bitiruvchilar haqidagi ma'lumotlar yig'iladi
+        graduation_data = Graduation_year.objects.filter(status=True).aggregate(
+            total_enrollees=Sum('number_of_enrollees'),
+            total_graduates=Sum('number_of_graduates')
+        )
+        
+        enrollees = graduation_data.get('total_enrollees') or 0
+        graduates = graduation_data.get('total_graduates') or 0
+
+        # O'qishga kirish foizi
+        enrollment_rate = round((enrollees * 100 / graduates), 2) if graduates > 0 else 0
+
         data = [{
             "yearly_experiense" : yearly_experiense,
             "students_count" : students_count,
             "banchs_count" : banchs_count,
             "teachers_count" : teachers_count,
+            "graduates":graduates,
+            "enrollees":enrollees,
+            "enrollment_rate" : enrollment_rate,
         }]
-    except:
-        return Response({'error': "Ma'lumotlarni to'plashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
     
-    try:
         serializer = MW_HPA_Statistic_Data_Serializer(data=data, many=True)
         serializer.is_valid(raise_exception=True)
 

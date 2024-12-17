@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.serializers import Serializer, CharField, IntegerField
+from rest_framework.serializers import Serializer, CharField, IntegerField, FloatField
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -18,6 +18,9 @@ class MW_HPA_Statistic_Data_Serializer(Serializer):
     students_count = IntegerField()
     banchs_count = IntegerField()
     teachers_count = IntegerField()
+    graduates = IntegerField()
+    enrollees = IntegerField()
+    enrollment_rate = FloatField()
 
 
 class MW_HPA_Science_Serializer(serializers.ModelSerializer):
