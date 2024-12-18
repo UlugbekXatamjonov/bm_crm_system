@@ -8,21 +8,14 @@ Loyihadagi muammolar:
 
 /--------------------------------------- Completed works ---------------------------------------/
 
--bitiruvchilarimiz sahifasiga ma'lumot chiqarildi;
-- Announcement qismi loyihadan olib tashlandi
+-o'quvchilar statusini o'zgartirildi;
+
 
 /--------------------------------------- Completed works ---------------------------------------/
 
 
 
 /--------------------------------------- Works for next day -----------------------------------/
-
-
-o'quvchilar statusini o;zgartirish:
-    -active
-    -deactive
-    -graduate
-    -no_stater
 
 - O'qtuvchini tajribasini o'sadigan qilish kk
 
@@ -39,16 +32,10 @@ o'quvchilar statusini o;zgartirish:
 """
 Muzaffar aka:
 -iconic dan oylik to'lov olish kk:
--Saytni rangini o'zgartirish;
 -maktabni 3D si
--bituvchilar qismi ni qo'shish
-
-
 
 
 ""
-
-
 
 
 

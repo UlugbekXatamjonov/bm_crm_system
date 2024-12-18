@@ -22,7 +22,6 @@ def student_photo_directory_path(instance, filename):
     return f'students/{student_name}_{instance.user.id}/photo/{filename}'
 
 
-
 class Student(models.Model):
     """
     O'quvchi modeliga oid maydonlar.
@@ -30,7 +29,23 @@ class Student(models.Model):
     - group: O'quvchining guruhi.
     - is_discount: Chegirma borligi.
     - discount_amount: Chegirma miqdori.
+    
+    O'quvchining statuslari:
+        o'qimoqchi bo'gan   ->  wanted
+        o'qiyotgan          ->  active
+        chiqib ketgan       ->  gone out
+        xaydalgan           ->  expelled
+        bitirgan            ->  graduated
+    
     """
+    
+    STUDENT_STATUS = (
+        ('wanted',"O'qimoqchi bo'lgan"),
+        ('active',"O'qiyotgan"),
+        ('gone_out',"Chiqib ketgan"),
+        ('expelled',"Xaydalgan"),
+        ('graduated',"Bitirgan")
+    )
     
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name="Foydalanuvchi")
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Sinf")
@@ -38,7 +53,11 @@ class Student(models.Model):
 
     is_discount = models.BooleanField(default=False, verbose_name="Chegirma")
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Chegirma miqdori")
-    # personal_status = models.CharField(max_length=100, null=True, blank=True, choices=PERSONAL_STATUS, default="student", verbose_name="Shaxsiy status")
+    student_status = models.CharField(max_length=100, null=True, blank=True, choices=STUDENT_STATUS, verbose_name="O'quvchi statusi")
+    
+    class Meta:
+        verbose_name = "O'quvchi"
+        verbose_name_plural = "O'quvchilar"
     
     def __str__(self):
         return self.user.get_full_name()
@@ -60,6 +79,11 @@ class Father_and_Mother(models.Model):
     # personal_status = models.CharField(max_length=100, null=True, blank=True, choices=PERSONAL_STATUS, default="father", verbose_name="Shaxsiy status")
     
     children = models.ManyToManyField(Student, related_name='parents', verbose_name="Bolalar")
+
+
+    class Meta:
+        verbose_name = 'Ota-ona'
+        verbose_name_plural = 'Ota-onalar'
 
     def __str__(self):
         return f"{self.user.get_full_name()}"
