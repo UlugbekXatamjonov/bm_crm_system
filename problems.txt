@@ -8,7 +8,7 @@ Loyihadagi muammolar:
 
 /--------------------------------------- Completed works ---------------------------------------/
 
--mw_mainpage_statistic_datas funksiyasiga o'zgartirish kiritildi: Bitiruvchilar statistikasi qo'shildi.
+-bitiruvchilarimiz sahifasiga ma'lumot chiqarildi;
 
 /--------------------------------------- Completed works ---------------------------------------/
 
@@ -16,8 +16,6 @@ Loyihadagi muammolar:
 
 /--------------------------------------- Works for next day -----------------------------------/
 
-
-Bitiruvchilarimiz sahifasiga ma'lumot chiqarish:  + bitirgan yili, statistika
 
 o'quvchilar statusini o;zgartirish:
     -active

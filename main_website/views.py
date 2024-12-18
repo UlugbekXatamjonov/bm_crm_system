@@ -25,7 +25,7 @@ from .models import Announcement, Contact_us, Parents_opinion, Graduate, Graduat
 from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
     MW_HPA_Students_Certificate_Serializer, MW_Student_Certificate_Serializer, MW_HPA_Science_Serializer,\
     MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Announcement_Serializer, Contact_us_Serializer,\
-    MW_HPA_Parents_opinion_Certificate_Serializer
+    MW_HPA_Parents_opinion_Certificate_Serializer, Graduation_year_Serializer
 
 
 
@@ -343,7 +343,33 @@ def announcement_detail(request, slug):
     
     return Response(serializer.data, status=status.HTTP_200_OK)
     
+
     
+""" -------------- Contact us section API -------------- """
+@api_view(["GET"])
+@throttle_classes({AnonRateThrottle})
+def graduation_years_list(request):
+    """ Bitiruvchilar haqida ma'lumotlar
+    So'rov turi: GET
+    Maydonlar:
+        year - Bitirgan yili
+        number_of_graduates - Bitiruvchilar soni
+        number_of_enrollees - O'qishga kirganlar soni
+        graduates - Bitiruvchi haqidagi ma'lumotlar(array)
+        name - ismi
+        university - universitet nomi
+        photo - rasmi
+    """
+
+    try:
+        graduation_years = Graduation_year.objects.filter(status=True)
+        serializer = Graduation_year_Serializer(graduation_years, many=True, context={'request':request})
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'error':"Malumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+
+
 
 """ -------------- Contact us section API -------------- """
 @api_view(['POST'])

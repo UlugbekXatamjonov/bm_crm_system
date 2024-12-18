@@ -103,7 +103,6 @@ class Graduate(models.Model):
     status = models.BooleanField(default=True, verbose_name="Holati")
     created_on = models.DateTimeField(auto_now_add=True)
 
-
     class Meta:
         verbose_name = "Bitiruvchi"
         verbose_name_plural = "Bitiruvchilar"
@@ -111,7 +110,7 @@ class Graduate(models.Model):
     def __str__(self):
         return self.name
     
-    
+   
     
     
     

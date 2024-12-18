@@ -8,7 +8,7 @@ from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
 
-from .models import Announcement, Parents_opinion, Contact_us
+from .models import Announcement, Parents_opinion, Contact_us, Graduation_year, Graduate
 
 
 """ -------------- Home page API -------------- """
@@ -143,6 +143,26 @@ class Announcement_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['name', 'slug', 'about', 'photo', 'created_on']
+
+
+
+""" -------------- Graduate section API -------------- """
+class Graduate_Serializer(serializers.ModelSerializer):
+    """ Bitiruvchilar ma'lumoti uchun serializer """
+    
+    class Meta:
+        model = Graduate
+        fields = ["name", "university", "photo"]
+
+
+class Graduation_year_Serializer(serializers.ModelSerializer):
+    """ Bitiruvchilar yili uchun serializer """
+
+    graduates = Graduate_Serializer(many=True, read_only=True)
+
+    class Meta:
+        model = Graduation_year
+        fields = ['year', 'number_of_graduates', 'number_of_enrollees', 'graduates']
 
 
 
