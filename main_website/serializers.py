@@ -8,7 +8,7 @@ from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
 
-from .models import Announcement, Parents_opinion, Contact_us, Graduation_year, Graduate
+from .models import Parents_opinion, Contact_us, Graduation_year, Graduate
 
 
 """ -------------- Home page API -------------- """
@@ -136,13 +136,13 @@ class MW_Student_Certificate_Serializer(serializers.ModelSerializer):
 
 
 """ -------------- Announcement section API -------------- """
-class Announcement_Serializer(serializers.ModelSerializer):
-    """" E'lonlar bo'limi uchun serializer """
-    created_on = serializers.DateTimeField(format="%Y-%m-%d | %H:%M:%S")  # Sana va vaqtga format belgilash
+# class Announcement_Serializer(serializers.ModelSerializer):
+#     """" E'lonlar bo'limi uchun serializer """
+#     created_on = serializers.DateTimeField(format="%Y-%m-%d | %H:%M:%S")  # Sana va vaqtga format belgilash
 
-    class Meta:
-        model = Announcement
-        fields = ['name', 'slug', 'about', 'photo', 'created_on']
+#     class Meta:
+#         model = Announcement
+#         fields = ['name', 'slug', 'about', 'photo', 'created_on']
 
 
 

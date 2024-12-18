@@ -1,14 +1,14 @@
 from django.contrib import admin
 
-from .models import Announcement, Parents_opinion, Contact_us,  Graduation_year, Graduate
+from .models import Parents_opinion, Contact_us,  Graduation_year, Graduate
 
 # Register your models here.
 
 
-@admin.register(Announcement)
-class Announcement_Admin(admin.ModelAdmin):
-    list_display = ['name', 'status', 'created_on']
-    list_filter = ['status', 'created_on']
+# @admin.register(Announcement)
+# class Announcement_Admin(admin.ModelAdmin):
+#     list_display = ['name', 'status', 'created_on']
+#     list_filter = ['status', 'created_on']
 
 
 @admin.register(Parents_opinion)

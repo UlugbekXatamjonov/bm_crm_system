@@ -19,12 +19,12 @@ from student.models import Student, Student_Certificate
 from science.models import Science
 from exam.models import Weeky_exam_photos, Quarter_winners
 
-from .models import Announcement, Contact_us, Parents_opinion, Graduate, Graduation_year
+from .models import Contact_us, Parents_opinion, Graduate, Graduation_year
 
 
 from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_HPA_Statistic_Data_Serializer,\
     MW_HPA_Students_Certificate_Serializer, MW_Student_Certificate_Serializer, MW_HPA_Science_Serializer,\
-    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Announcement_Serializer, Contact_us_Serializer,\
+    MW_HPA_Weeky_Exam_Photos_Serializer, MW_HPA_Quarter_winners_Serializer, Contact_us_Serializer,\
     MW_HPA_Parents_opinion_Certificate_Serializer, Graduation_year_Serializer
 
 
@@ -307,41 +307,41 @@ def mw_student_certificate_section_list(request):
 
 
 """ -------------- Announcement section API -------------- """
-@throttle_classes([AnonRateThrottle])
-@api_view(['GET'])
-def announcement_list(request):
-    """ E'lonlar bo'limi uchun API ro'yhati 
-        name - E'lon nomi
-        slug - bitta e'longa kirish uchun kalit
-        about - e'lon matni
-        photo - e'lon rasm
-        created_on - e'lon yozilgan vaqti
-    """
+# @throttle_classes([AnonRateThrottle])
+# @api_view(['GET'])
+# def announcement_list(request):
+#     """ E'lonlar bo'limi uchun API ro'yhati 
+#         name - E'lon nomi
+#         slug - bitta e'longa kirish uchun kalit
+#         about - e'lon matni
+#         photo - e'lon rasm
+#         created_on - e'lon yozilgan vaqti
+#     """
     
-    try:
-        announcements = Announcement.objects.filter(status=True)
-        serializer = Announcement_Serializer(announcements, many=True, context={'request': request})
+#     try:
+#         announcements = Announcement.objects.filter(status=True)
+#         serializer = Announcement_Serializer(announcements, many=True, context={'request': request})
     
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
-        return Response({'error':""})
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#     except:
+#         return Response({'error':""})
     
     
-@throttle_classes([AnonRateThrottle])
-@api_view(['GET'])    
-def announcement_detail(request, slug):
-    """  E'lonlar bo'limida yakka e'longa kirish uchun API 
-        name - E'lon nomi
-        slug - bitta e'longa kirish uchun kalit
-        about - e'lon matni
-        photo - e'lon rasm
-        created_on - e'lon yozilgan vaqti
-    """
+# @throttle_classes([AnonRateThrottle])
+# @api_view(['GET'])    
+# def announcement_detail(request, slug):
+#     """  E'lonlar bo'limida yakka e'longa kirish uchun API 
+#         name - E'lon nomi
+#         slug - bitta e'longa kirish uchun kalit
+#         about - e'lon matni
+#         photo - e'lon rasm
+#         created_on - e'lon yozilgan vaqti
+#     """
     
-    announcement = Announcement.objects.filter(status=True, slug=slug)
-    serializer = Announcement_Serializer(announcement, many=True, context={'request':request})
+#     announcement = Announcement.objects.filter(status=True, slug=slug)
+#     serializer = Announcement_Serializer(announcement, many=True, context={'request':request})
     
-    return Response(serializer.data, status=status.HTTP_200_OK)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
     
 
     
