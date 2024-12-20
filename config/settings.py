@@ -227,3 +227,45 @@ CORS_ORIGIN_ALLOW_ALL = True
 # -----  Cors origin settings ------
 
 
+
+# ----------- Logging conficuration -----------------
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'monthly_file_handler': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'logs/monthly_log.log',  # Log fayli joylashuvi
+            'when': 'midnight',  # Har kuni tunda aylantiradi (yangi kun boshlanishida)
+            'interval': 30,  # 30 kunlik aylanish
+            'backupCount': 12,  # Maksimal zahira fayl soni
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'main_website_logger': {
+            'handlers': ['monthly_file_handler'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+
+# ----------- Logging conficuration -----------------
+
+
+
+
+
+
+
+
+
+

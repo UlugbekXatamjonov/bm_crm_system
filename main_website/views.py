@@ -28,6 +28,13 @@ from .serializers import MW_HPA_Teachers_Serializer, MW_Teachers_Serializer, MW_
     MW_HPA_Parents_opinion_Certificate_Serializer, Graduation_year_Serializer
 
 
+""" --------------- Loggs  ------------------ """
+import logging
+main_website_logger = logging.getLogger('main_website_logger')
+
+""" --------------- Loggs  ------------------ """
+
+
 
 # Create your views here.
 """ -------------- Home page API -------------- """
@@ -82,7 +89,9 @@ def mw_mainpage_statistic_datas(request):
         """ serializer.data[0] --> yuborilayotgan data ro'yhat bo'lib qoldi uni tsiklda bo'masligi uchun,
             [0] elementni o'zini yuboriladi."""
         return Response(serializer.data[0], status=status.HTTP_200_OK)
-    except:
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga statistika chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
  
@@ -104,7 +113,9 @@ def mw_mainpage_sciences_list(request):
         serializer = MW_HPA_Science_Serializer(science, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga fanlar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -124,9 +135,11 @@ def mw_mainpage_weekly_exam_photos_list(request):
         serializer = MW_HPA_Weeky_Exam_Photos_Serializer(photos, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga haftalik imtihonlar rasmlarini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
- 
+    
         
 @api_view(['GET'])
 @throttle_classes([AnonRateThrottle])
@@ -143,9 +156,11 @@ def mw_mainpage_quarter_winners_list(request):
         serializer = MW_HPA_Quarter_winners_Serializer(photos, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga choraklik g'oliblari rasmini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
-         
+       
         
 @api_view(['GET'])
 @throttle_classes([AnonRateThrottle])  # Faqat ushbu funksiya uchun AnonRateThrottle ni yoqish
@@ -164,9 +179,11 @@ def mw_mainpage_teachers_list(request):
         serializer = MW_HPA_Teachers_Serializer(teachers, many=True, context={'request': request}) # Serializer orqali ma'lumotlarni formatlash
         
         return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
-    except:
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
-
+    
    
 @api_view(['GET'])
 @throttle_classes([AnonRateThrottle])
@@ -189,9 +206,11 @@ def mw_mainpage_students_certificate(request):
         serializer = MW_HPA_Students_Certificate_Serializer(certificate, many=True, context={'request': request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except: 
-        return Response({'error': "Ma'lumotlarni to'plashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
-        
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga o'quvchilar natijasini chiqarishda xatolik bo'ldi: {e}")
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+       
 
 @api_view(["GET"])
 @throttle_classes({AnonRateThrottle})
@@ -209,8 +228,10 @@ def mw_mainpage_parents_opinion(request):
         serializer = MW_HPA_Parents_opinion_Certificate_Serializer(opinons, many=True, context={'request':request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
-        return Response({"error":"Ma'lumotlarni qayta ishlashda hatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
+    
+    except Exception as e:
+        main_website_logger.error(f"Asosiy sahifaga ota-onalar fikrini chiqarishda xatolik bo'ldi: {e}")
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
 
@@ -261,10 +282,10 @@ def mw_teachers_section_list(request):
         serializer = MW_Teachers_Serializer(filterset.qs, many=True, context={'request': request}) # filterset.qs --> qs o'zgarmas key
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    except:
-        return Response({'error': f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: "}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
+    except Exception as e:
+        main_website_logger.error(f"O'qtuvchilar bo'limida, o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+    
 
 
 """ -------------- Result section API -------------- """
@@ -301,9 +322,11 @@ def mw_student_certificate_section_list(request):
         serializer = MW_Student_Certificate_Serializer(filterset.qs, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     except Exception as e:
-        return Response({'error': f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        main_website_logger.error(f"Result bo'limida, natijalar chiqarishda xatolik bo'ldi: {e}")
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+    
 
 
 """ -------------- Announcement section API -------------- """
@@ -345,7 +368,7 @@ def mw_student_certificate_section_list(request):
     
 
     
-""" -------------- Contact us section API -------------- """
+""" --------------  Graduates section API -------------- """
 @api_view(["GET"])
 @throttle_classes({AnonRateThrottle})
 def graduation_years_list(request):
@@ -366,15 +389,17 @@ def graduation_years_list(request):
         serializer = Graduation_year_Serializer(graduation_years, many=True, context={'request':request})
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except:
-        return Response({'error':"Malumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)    
-
+  
+    except Exception as e:
+        main_website_logger.error(f"Bitiruvchilar bo'limiga ma'lumot chiqarishda xatolik bo'ldi: {e}")
+        return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
+    
 
 
 """ -------------- Contact us section API -------------- """
 @api_view(['POST'])
 @throttle_classes([AnonRateThrottle])
-def teacher_create(request):
+def contact_create(request):
     """ Yangi xabar qo'shish uchun funksiya. 
     So'rob turi: POST
     Maydonlar:
@@ -387,7 +412,9 @@ def teacher_create(request):
         serializer.save()        
         return Response(
             {'data':f"Xabaringiz muvaffaqiyatli yuborildi !"}, status=status.HTTP_201_CREATED)
-        
+    
+    
+    main_website_logger.error(f"Contact us dan xabar kelishida xatolik bo'ldi: {e}")   
     return Response({'error':"Ma'lumotlarni tuborishda xatolik yuzaga keldi"}, status=status.HTTP_400_BAD_REQUEST)
 
 

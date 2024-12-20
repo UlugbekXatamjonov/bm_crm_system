@@ -3,3 +3,9 @@ project_data.txt
 staticfiles
 
 
+# log fayillar
+*.log
+logs/
+
+
+

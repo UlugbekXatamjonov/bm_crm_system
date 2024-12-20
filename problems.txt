@@ -8,11 +8,13 @@ Loyihadagi muammolar:
 
 /--------------------------------------- Completed works ---------------------------------------/
 
--o'quvchilar statusini o'zgartirildi;
-
+-main-website da hamma funksiyalarga log qo'shib chiqildi;
 
 /--------------------------------------- Completed works ---------------------------------------/
 
+Qolgan barcha funksiyalarga log qo'shib chiqish kerak;
+bitiruvchilarga paginatiion qilish kk;
+pagination qilish kerak bo'lanlarga qo'yib chiqish kk;
 
 
 /--------------------------------------- Works for next day -----------------------------------/
