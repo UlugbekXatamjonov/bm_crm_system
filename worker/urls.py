@@ -7,4 +7,9 @@ urlpatterns = [
     path('teachers/<slug:slug>/', teacher_detail, name='teacher-detail'),
     path('teachers/create/', teacher_create, name='teacher-create'),
     
-    ]
+]
+
+
+
+
+

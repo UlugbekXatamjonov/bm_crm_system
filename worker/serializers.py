@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import CustomUser
-from users.serializers import CustomUser_Create_Serializer, CustomUser_List_Serializer
+from users.serializers import CustomUser_Create_Serializer, CustomUser_List_Serializer, CustomUser_datas_for_Teachers_list_Serializer
 
 from .models import Teacher, Worker, Teacher_Certificate, Teacher_SocialMedia
 
@@ -46,12 +46,12 @@ class Teacher_Create_Serializer(serializers.ModelSerializer):
         teacher = Teacher.objects.create(user=user, **validated_data)  # Teacher obyekti yaratamiz
         
         return teacher
-    
+
         
 class Teacher_List_Serializer(serializers.ModelSerializer):
     """ O'qtuvchilar ro'yhari uchun Serializer """
     
-    user = CustomUser_List_Serializer()  # Yangi user qo'shish uchun CustomUser serializerini ishlatamiz
+    user = CustomUser_datas_for_Teachers_list_Serializer()  # User malumotlarini olish uchun ushbu serializerni ishlatamiz 
 
     science_name = serializers.CharField(source='science.name')
     science_slug = serializers.CharField(source='science.slug')
@@ -62,7 +62,7 @@ class Teacher_List_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ['user', 'slug', 'photo', 'science_name', 'science_slug', 'is_class_leader', 
-                    "is_mainpage",  'group_name_field', 'group_slug_field']
+                    'group_name_field', 'group_slug_field']
 
 
     def get_group_name_field(self, obj):
@@ -91,7 +91,7 @@ class Teacher_Detail_Serializer(serializers.ModelSerializer):
 
     user = CustomUser_List_Serializer()
     teacher_certificates = Teacher_Certificate_Serializer(many=True, read_only=True)
-    teacher_sms = Teacher_SM_Serializer(many=True, read_only=True)
+    # teacher_sms = Teacher_SM_Serializer(many=True, read_only=True)
 
     science_name = serializers.CharField(source='science.name')
     science_slug = serializers.CharField(source='science.slug')
@@ -105,7 +105,7 @@ class Teacher_Detail_Serializer(serializers.ModelSerializer):
         fields = ["user", "slug", "photo", "passport_photo", "dagree", "experience", "start_time", 
                     "science_name", "science_slug", "group_name", "group_slug",   
                     "is_class_leader", "is_mainpage",
-                    "teacher_certificates", "teacher_sms"
+                    "teacher_certificates"
                 ]
 
     
@@ -132,9 +132,6 @@ class Teacher_Detail_Serializer(serializers.ModelSerializer):
 
 
 
-
-
-
 """ --------------------- Worker Section ---------------------  """
 class WorkerSerializer(serializers.ModelSerializer):
     """
@@ -145,4 +142,8 @@ class WorkerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Worker
         fields = ['id', 'user', 'photo', 'is_superadmin', 'salary']
+
+
+
+
 

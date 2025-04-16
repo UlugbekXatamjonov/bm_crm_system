@@ -211,7 +211,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:8080',
     'http://localhost:8001',
-    'http://localhost:800'
+    'http://localhost:800',
+    
+    "https://bmcrm.vercel.app",
+    "https://bmschoolcrm02.pythonanywhere.com"
 )
 
 CORS_ALLOW_METHODS = [

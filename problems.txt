@@ -2,19 +2,22 @@ Loyihadagi muammolar:
 
 -Active userni logout qilib tokenini back_list ga qo'shsam ham, 
     token yana ishlayveryapdi.
-- Passwordt reset email va Password reset qismlari ishlamayapdi, SMTP hizmatni ulash kk !
+- Password reset email va password reset qismlari ishlamayapdi, SMTP hizmatni ulash kk !
 - 
 
 
+
+
+
+
 /--------------------------------------- Completed works ---------------------------------------/
 
--main-website da hamma funksiyalarga log qo'shib chiqildi;
 
-/--------------------------------------- Completed works ---------------------------------------/
 
-Qolgan barcha funksiyalarga log qo'shib chiqish kerak;
-bitiruvchilarga paginatiion qilish kk;
-pagination qilish kerak bo'lanlarga qo'yib chiqish kk;
+
+
+
+
 
 
 /--------------------------------------- Works for next day -----------------------------------/
@@ -24,17 +27,11 @@ pagination qilish kerak bo'lanlarga qo'yib chiqish kk;
 -Teacher list bo'limida jami o'quvchilarni(active va deactive holatidagilarni alohida) sonini chiqarish kk ❗ J bn gaplash
 - detail pagida  maktabdagi staj vaqtini  chiqarish kk;
 
-- Qolgan API larni ham chiqarish kk
-        
-/--------------------------------------- Works for next day -----------------------------------/
-
 
 
 
 """
 Muzaffar aka:
--iconic dan oylik to'lov olish kk:
--maktabni 3D si
 
 
 ""
@@ -72,9 +69,5 @@ Muzaffar aka:
 }
 
 
-/------------------------------------------------ Frontga ------------------------------------------/ 
 
 
-
-
-yana boshladi

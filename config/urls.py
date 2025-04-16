@@ -61,7 +61,7 @@ urlpatterns = [
     
     # apps
     path('user/', include('users.urls')),
-    path('main-website/', include('main_website.urls')),
+    # path('main-website/', include('main_website.urls')),
     path('worker/', include('worker.urls')),
 
 ]

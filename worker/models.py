@@ -31,7 +31,7 @@ def worker_directory_path(instance, filename):
 
 
 
-""" Teacherning slugi uchun funksi """
+""" Teacherning slugi uchun funksiya """
 """ Ikkita maydonni slugda birlashtirish """
 def slug_funckion_for_teacher(self):
     """ O'qtuvchi uchun slugda uning ism va familiyasini birlashtirish uchun funksiya """        
