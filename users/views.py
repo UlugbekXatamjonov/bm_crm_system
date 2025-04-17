@@ -18,7 +18,8 @@ from .serializers import \
         LogoutSerializer,\
         UserChangePasswordSerializer,\
         SendPasswordResetEmailSerializer,\
-        UserPasswordResetSerializer 
+        UserPasswordResetSerializer,\
+        UserProfileSerializer
 
 
 
@@ -40,19 +41,28 @@ class UserRegistrationView(APIView):
         token = get_tokens_for_user(user)
         return Response({'token': token, 'message': "Ro'yhatdan muvaffaqiyatli o'tdingiz"}, status=status.HTTP_201_CREATED)
 
+from pprint import pprint
 
 class UserLoginView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UserLoginSerializer(data=request.data)
+             
         if serializer.is_valid():
             user = serializer.validated_data['user']
+
+            """ Login bo'lgan userning ma'lumotlarini bazadan passporti bo'yicha olamiz  """
+            active_user = CustomUser.objects.get(passport=serializer.data['passport'])
+            active_user_serializer = UserProfileSerializer(active_user)
+            
             refresh = RefreshToken.for_user(user)
+            
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
+                "user":active_user_serializer.data # userning shasiy ma'lumotlari
             }, status=status.HTTP_200_OK)
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -63,7 +73,6 @@ class LogoutAPIView(APIView):
             serializer.save()
             return Response({"message": "Tizimdan muvaffaqiyatli chiqdingiz !"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class UserChangePasswordView(APIView):
     renderer_classes = [UserRenderer]

@@ -99,7 +99,6 @@ class Teacher_Detail_Serializer(serializers.ModelSerializer):
     group_name = serializers.SerializerMethodField()
     group_slug = serializers.SerializerMethodField()
     
-    
     class Meta:
         model = Teacher
         fields = ["user", "slug", "photo", "passport_photo", "dagree", "experience", "start_time", 

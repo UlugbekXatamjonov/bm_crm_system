@@ -167,6 +167,25 @@ class UserPasswordResetSerializer(serializers.Serializer):
   
 """ ---------------- Serialization for User ---------------- """
   
+class UserProfileSerializer(serializers.ModelSerializer): 
+    """ User login bo'lganda, tokenga qo'shimcha ravishda uning ma'lumotlarini yuborish uchun serializer """
+    
+    class Meta:
+        model = CustomUser
+        fields = (
+            "id",
+            "passport",
+            "date_of_bith",
+            "phone1",
+            "phone2",
+            "gender",
+            "personal_status",
+            "address",
+            "status",
+            "created_on",
+        )
+    
+  
 class CustomUser_Create_Serializer(serializers.ModelSerializer):
   """
   OnetoOneField bog'lanish bo'yicha ulangan modellarda O'qtuvchi, Xodim, O'quvchi, Ota-ona ni qo'shish vaqtida,
@@ -203,5 +222,3 @@ class CustomUser_datas_for_Teachers_list_Serializer(serializers.ModelSerializer)
       
       
       
-
-    
