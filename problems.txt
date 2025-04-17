@@ -7,6 +7,13 @@ Loyihadagi muammolar:
 
 
 
+/--------------------------------------- Daily proplems ---------------------------------------/
+serverga qo'yishda muammo !!!!
+    - log file sozlamalarini o'zgartirish kerak !!
+
+
+Permissions larni Javohir bilan gaplashish !!
+
 
 
 

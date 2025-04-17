@@ -91,7 +91,7 @@ def mw_mainpage_statistic_datas(request):
         return Response(serializer.data[0], status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga statistika chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga statistika chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
  
@@ -115,7 +115,7 @@ def mw_mainpage_sciences_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga fanlar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga fanlar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -137,7 +137,7 @@ def mw_mainpage_weekly_exam_photos_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga haftalik imtihonlar rasmlarini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga haftalik imtihonlar rasmlarini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
         
@@ -158,7 +158,7 @@ def mw_mainpage_quarter_winners_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga choraklik g'oliblari rasmini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga choraklik g'oliblari rasmini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
        
         
@@ -181,7 +181,7 @@ def mw_mainpage_teachers_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)  # Javobni qaytarish
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
    
@@ -208,7 +208,7 @@ def mw_mainpage_students_certificate(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga o'quvchilar natijasini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga o'quvchilar natijasini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
        
 
@@ -230,7 +230,7 @@ def mw_mainpage_parents_opinion(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Asosiy sahifaga ota-onalar fikrini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Asosiy sahifaga ota-onalar fikrini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -283,7 +283,7 @@ def mw_teachers_section_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     except Exception as e:
-        main_website_logger.error(f"O'qtuvchilar bo'limida, o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"O'qtuvchilar bo'limida, o'qtuvchilar ro'yhatini chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -324,7 +324,7 @@ def mw_student_certificate_section_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        main_website_logger.error(f"Result bo'limida, natijalar chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Result bo'limida, natijalar chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -391,7 +391,7 @@ def graduation_years_list(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
   
     except Exception as e:
-        main_website_logger.error(f"Bitiruvchilar bo'limiga ma'lumot chiqarishda xatolik bo'ldi: {e}")
+        # main_website_logger.error(f"Bitiruvchilar bo'limiga ma'lumot chiqarishda xatolik bo'ldi: {e}")
         return Response({'error':"Ma'lumotlarni qayta ishlashda xatolik yuzaga keldi !"}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -414,7 +414,7 @@ def contact_create(request):
             {'data':f"Xabaringiz muvaffaqiyatli yuborildi !"}, status=status.HTTP_201_CREATED)
     
     
-    main_website_logger.error(f"Contact us dan xabar kelishida xatolik bo'ldi: {e}")   
+    # main_website_logger.error(f"Contact us dan xabar kelishida xatolik bo'ldi: {e}")   
     return Response({'error':"Ma'lumotlarni tuborishda xatolik yuzaga keldi"}, status=status.HTTP_400_BAD_REQUEST)
 
 
