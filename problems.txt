@@ -11,14 +11,17 @@ Loyihadagi muammolar:
 serverga qo'yishda muammo !!!!
     - log file sozlamalarini o'zgartirish kerak !!
 
-- teacher create ishlamayapdi !
 
+- Teacher da tahrirlash va o'chirishni ko'rish kerak !
+- Va front bn maslahatlashib kerakli yoki keraksiz ma'lumotlarni ajratib API ni yuborishga tayorlash kerak.
+- serverga joylab, API chiqarish kerak
 
 
 
 
 /--------------------------------------- Completed works ---------------------------------------/
 
+- teacher create ishlamayapdi !
 
 
 
@@ -29,6 +32,7 @@ serverga qo'yishda muammo !!!!
 
 /--------------------------------------- Works for next day -----------------------------------/
 
+-   o'qtuvchi va ishchilar uchun "ishga olingan vaqt" maydoni qo'shish kerak
 - O'qtuvchini tajribasini o'sadigan qilish kk
 
 -Teacher list bo'limida jami o'quvchilarni(active va deactive holatidagilarni alohida) sonini chiqarish kk ❗ J bn gaplash

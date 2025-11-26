@@ -59,12 +59,16 @@ def teacher_detail(request, slug):
 
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def teacher_create(request):
     """ Yangi o'qituvchi va User qo'shish uchun funksiya. """
     
+    print("-------------------------------------------")
+    
+    print(request.data)
     serializer = Teacher_Create_Serializer(data=request.data)
+    
     if serializer.is_valid():
         serializer.save()        
         return Response(

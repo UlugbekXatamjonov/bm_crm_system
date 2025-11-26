@@ -33,7 +33,7 @@ class Teacher_Create_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = ['user', 'slug', 'photo', 'passport_photo', 'salary', 'science', 'dagree', 'experience', 
+        fields = ['user', 'slug', 'photo', 'passport_photo', 'science', 'dagree', 'experience', 
                     'start_time', 'is_class_leader', 'is_mainpage']
 
 
