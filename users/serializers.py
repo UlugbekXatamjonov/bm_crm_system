@@ -208,7 +208,7 @@ class CustomUser_List_Serializer(serializers.ModelSerializer):
   
   class Meta:
       model = CustomUser
-      fields = ['passport', 'first_name', 'last_name', 'date_of_bith', 'phone1', 'phone2', 
+      fields = ['id','passport', 'password', 'first_name', 'last_name', 'date_of_bith', 'phone1', 'phone2', 
                   'gender', 'personal_status', 'status']
 
 class CustomUser_datas_for_Teachers_list_Serializer(serializers.ModelSerializer):
