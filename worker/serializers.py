@@ -142,36 +142,16 @@ class TeacherListSerializer(serializers.ModelSerializer):
         return group.slug if group is not None else None
 
 
-# ========================================================================
-# 2) TeacherDetailSerializer
-#    - batafsil ko'rinish uchun serializer
-#    - nested sertifikatlar va social linklar qo'shiladi
-#    - science (FK) dan name va slug olinadi
-#    - experience: bazadagi saqlangan maydon + hisoblangan variant (calculated) mavjud bo'lishi mumkin
-# ========================================================================
 
 class TeacherDetailSerializer(serializers.ModelSerializer):
-    """
-    Birdona o'qtuvchining to'liq ma'lumotlari uchun serializer!
-    Har bir qatorda nima qilinganligi to'liq tushuntirilgan.
-    """
+    """ O'qtuvchining to'liq ma'lumotlari uchun serializer! """
 
-    # ----------------------------
-    # user haqida batafsil ma'lumot (nested serializer orqali)
-    # ----------------------------
-    user = CustomUser_List_Serializer(read_only=True)
+    user = CustomUser_List_Serializer(read_only=True) # user haqida batafsil ma'lumot (nested serializer orqali)
     # izoh: read_only=True — detailda user ma'lumotlari ko'rsatiladi, lekin shu serializer orqali
     # userni yangilash amalga oshmaydi (alohida user-edit endpoint kerak).
 
-    # ----------------------------
-    # Sertifikatlar va social linklarni nested serializerlarda qaytarish
-    # teacher.certificates va teacher.social_links (related_name) orqali olamiz.
-    # ----------------------------
-    teacher_certificates = TeacherCertificateSerializer(many=True, read_only=True)
-    # izoh: many=True — bir nechta sertifikat qaytishi mumkin.
-
+    teacher_certificates = TeacherCertificateSerializer(many=True, read_only=True) # many=True — bir nechta sertifikat qaytishi mumkin.
     teacher_social_links = TeacherCertificateSerializer(many=True, read_only=True)
-    # izoh: related_name modelda 'social_links' deb berilgan bo'lsa shu nomdan olinadi.
 
     # ----------------------------
     # science (ForeignKey) dan tegishli maydonlarni olish:

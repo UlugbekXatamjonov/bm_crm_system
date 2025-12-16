@@ -9,7 +9,7 @@ from django_filters import rest_framework as filters # type: ignore
 
 from .models import Teacher, Worker
 from .serializers import TeacherListSerializer, TeacherDetailSerializer
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # teacher/views.py
@@ -38,92 +38,88 @@ from .serializers import TeacherListSerializer, TeacherDetailSerializer
 logger = logging.getLogger(__name__)  # __name__ modul nomi bilan log yozadi
 
 
-# =========================================================
-# 1) TeacherListAPIView
-#    - barcha o'qituvchilar ro'yxatini qaytaradi
-#    - select_related va prefetch_related orqali performance optimallashtirilgan
-# =========================================================
-class TeacherListAPIView(APIView):
-    """
-    GET /api/teachers/
+from django.db.models import Q
+from rest_framework.generics import ListAPIView
+from rest_framework import permissions
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
-    Izoh:
-    - Bu view barcha o'qituvchilarni qaytaradi.
-    - Permission: hozir AllowAny (hamma ko'ra oladi). Agar faqat ichidagi
-      foydalanuvchilar ko'rsin desangiz, permissions.IsAuthenticated qo'yasiz.
-    """
+from .models import Teacher
+from .serializers import TeacherListSerializer
+from .filters import TeacherFilter
 
-    # permission_classes atributi klass darajasida ruxsatni belgilaydi.
-    permission_classes = [permissions.AllowAny]  # hozir hamma ruxsat oladi
+class TeacherListAPIView(ListAPIView):
+    """ O‘qituvchilar ro‘yxatini chiqaruvchi API """
 
-    def get(self, request):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = TeacherListSerializer
+
+    queryset = Teacher.objects.select_related( # modeldagi ForeginKey lar ni olish uchun
+        "user", "science"
+    ).prefetch_related( # Teacher, modeli ForeginKey bo'lib ulangan model obyektlarini olish uchun  
+        "teacher_group",
+        "teacher_certificates",
+        "teacher_sms"
+    ).all()
+
+    # ---------- FILTR settings ----------
+    filter_backends = [
+        DjangoFilterBackend,   # ?science=math&gender=male ...
+        SearchFilter,          # ?search=ali yoki ?search=ali karimov
+        OrderingFilter,        # ?ordering=experience yoki -experience
+    ]
+
+
+    # ---------- FILTER ----------
+    filterset_class = TeacherFilter
+
+
+    # ---------- SEARCH ----------
+    # Bu search faqat search_fields bo‘yicha ishlaydi
+    search_fields = [
+        "user__first_name",
+        "user__last_name",
+        "science__name",
+        "user__passport",
+        "user__phone1",
+        "user__phone2",
+        "user__address",
+        "dagree",
+        "experience",
+
+    ]
+
+
+    # ---------- ORDERING ----------
+    ordering_fields = ["experience", "created_at"]
+    ordering = ["-experience"]  # default tartib: eng tajribali o‘qituvchilar avval
+
+
+    def get_queryset(self):
         """
-        GET metodi:
-        - so'rov parametrlarini o'qiydi (filterlar uchun),
-        - querysetni optimallashtirib oladi,
-        - serializer orqali JSON formatga o'tkazadi,
-        - Response bilan qaytaradi.
+        Searchni yanada kuchaytirish:
+        - katta-kichik harfni farq qilmaydi
+        - bir nechta so‘zlarni bo‘laklab qidiradi
         """
 
-        # 1) Log: endpoint chaqirilgani haqida yozib qo'yamiz.
-        logger.info("Teacher list API called")
+        queryset = super().get_queryset()
 
-        # 2) Asosiy queryset:
-        #    - select_related("user", "science"):
-        #       ForeignKey bo'lgan user va science bilan JOIN qilib oladi,
-        #       natijada N+1 query muammosi kamayadi.
-        #    - prefetch_related(...) (reverse FK yoki many-to-many uchun):
-        #       teacher_group, teacher_certificates, teacher_sms kabi
-        #       reverse relationshiplarni alohida queryda oldindan yuklaydi.
-        queryset = Teacher.objects.select_related("user", "science").prefetch_related(
-            "teacher_group",          # teacher -> group (reverse FK) uchun prefetch
-            "teacher_certificates",   # teacher -> certificates (reverse FK)
-            "teacher_sms"             # teacher -> social media links (reverse FK)
-        )
+        search = self.request.query_params.get("search")
 
-        # 3) Filterlar (soddalashtirilgan):
-        #    - request.GET orqali kelgan parametrlarga qarab querysetni filtrlaysiz.
-        #    - agar ko'proq murakkab filter kerak bo'lsa, django-filter ishlatish yaxshiroq.
-        science = request.GET.get("science")            # masalan ?science=matematika
-        gender = request.GET.get("gender")              # masalan ?gender=male
-        is_class_leader = request.GET.get("is_class_leader")  # ?is_class_leader=true
-        is_mainpage = request.GET.get("is_mainpage")    # ?is_mainpage=1
+        if search:
+            # So‘zlarni bo‘laklarga ajratamiz
+            parts = search.split()
 
-        # 4) Har bir filter bo'yicha yana querysetni moslab olish:
-        #    - science: agar siz science ni FK qilib `slug` bilan so'rasangiz,
-        #      queryset.filter(science__slug=science) ishlatiladi.
-        if science:
-            # Bu yerda biz science ni slug orqali qidiryapmiz.
-            queryset = queryset.filter(science__slug=science)
+            # Har bir bo‘lak bo‘yicha Q() orqali OR qidiruv
+            q_obj = Q()
+            for p in parts:
+                q_obj |= Q(user__first_name__icontains=p)
+                q_obj |= Q(user__last_name__icontains=p)
+                q_obj |= Q(science__name__icontains=p)
 
-        if gender:
-            # user modelida gender maydoni bo'lsa shu orqali filter qilinadi.
-            queryset = queryset.filter(user__gender=gender)
+            queryset = queryset.filter(q_obj)
 
-        if is_class_leader is not None:
-            # is_class_leader boolean bo'lgani uchun "true"/"1" kabi qiymatlarni tekshiramiz
-            if is_class_leader.lower() in ("true", "1", "yes"):
-                queryset = queryset.filter(is_class_leader=True)
-            elif is_class_leader.lower() in ("false", "0", "no"):
-                queryset = queryset.filter(is_class_leader=False)
-
-        if is_mainpage is not None:
-            # is_mainpage uchun ham xuddi shunday tekshiruv
-            if is_mainpage.lower() in ("true", "1", "yes"):
-                queryset = queryset.filter(is_mainpage=True)
-            elif is_mainpage.lower() in ("false", "0", "no"):
-                queryset = queryset.filter(is_mainpage=False)
-
-        # 5) Serializer: queryset ni jarayon uchun serializerga uzatamiz.
-        #    - many=True chunki ko'p obyekt qaytadi
-        #    - context={'request': request} — serializer ichida .build_absolute_uri
-        #      kabi URL yaratish uchun request kerak bo'lishi mumkin.
-        serializer = TeacherListSerializer(queryset, many=True, context={"request": request})
-
-        # 6) Natija: serializer.data ni JSON sifatida qaytaramiz.
-        #    - status 200 OK
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        return queryset
 
 # =========================================================
 # 2) TeacherDetailAPIView
