@@ -1,32 +1,23 @@
-from rest_framework import status
-# from rest_framework import filters
+
+from django_filters import rest_framework as filters # type: ignore
+from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
+from django.db.models import Prefetch, Q
+import logging
+
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, throttle_classes, permission_classes
 from rest_framework.throttling import AnonRateThrottle
-
-from django_filters import rest_framework as filters # type: ignore
+from rest_framework.generics import ListAPIView
+from rest_framework import permissions
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.views import APIView
 
 from .models import Teacher, Worker
 from .serializers import TeacherListSerializer, TeacherDetailSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-# teacher/views.py
-
-# Django / DRF importlari
-import logging
-from django.shortcuts import get_object_or_404
-from django.db.models import Prefetch
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, permissions
-
-# Loyihadagi model va serializer importlari
-# Bu qatorlarni loyihangizdagi haqiqiy modul nomlariga moslab o'zgartiring.
-from .models import Teacher
-from .serializers import TeacherListSerializer, TeacherDetailSerializer
-    # TeacherCreateUpdateSerializer,
+from .filters import TeacherFilter
 
 
 # ---------------------------------------------------------
@@ -38,21 +29,13 @@ from .serializers import TeacherListSerializer, TeacherDetailSerializer
 logger = logging.getLogger(__name__)  # __name__ modul nomi bilan log yozadi
 
 
-from django.db.models import Q
-from rest_framework.generics import ListAPIView
-from rest_framework import permissions
-from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
-
-from .models import Teacher
-from .serializers import TeacherListSerializer
-from .filters import TeacherFilter
 
 class TeacherListAPIView(ListAPIView):
-    """ O‘qituvchilar ro‘yxatini chiqaruvchi API """
+    """ O'qituvchilar ro'yxatini chiqaruvchi API """
 
     permission_classes = [permissions.AllowAny]
     serializer_class = TeacherListSerializer
+    authentication_classes = AnonRateThrottle
 
     queryset = Teacher.objects.select_related( # modeldagi ForeginKey lar ni olish uchun
         "user", "science"
@@ -61,6 +44,7 @@ class TeacherListAPIView(ListAPIView):
         "teacher_certificates",
         "teacher_sms"
     ).all()
+
 
     # ---------- FILTR settings ----------
     filter_backends = [
@@ -74,58 +58,44 @@ class TeacherListAPIView(ListAPIView):
     filterset_class = TeacherFilter
 
 
-    # ---------- SEARCH ----------
-    # Bu search faqat search_fields bo‘yicha ishlaydi
-    search_fields = [
-        "user__first_name",
-        "user__last_name",
-        "science__name",
-        "user__passport",
-        "user__phone1",
-        "user__phone2",
-        "user__address",
-        "dagree",
-        "experience",
-
-    ]
-
-
     # ---------- ORDERING ----------
-    ordering_fields = ["experience", "created_at"]
-    ordering = ["-experience"]  # default tartib: eng tajribali o‘qituvchilar avval
+    ordering_fields = ["experience", "created_at", "date_of_bith", "start_time"]
+    ordering = ["-experience"]  # default tartib: eng tajribali o'qituvchilar avval
 
 
     def get_queryset(self):
-        """
-        Searchni yanada kuchaytirish:
-        - katta-kichik harfni farq qilmaydi
-        - bir nechta so‘zlarni bo‘laklab qidiradi
-        """
-
         queryset = super().get_queryset()
-
         search = self.request.query_params.get("search")
 
-        if search:
-            # So‘zlarni bo‘laklarga ajratamiz
+        if search: # search uchun maxsus funksiya 
             parts = search.split()
 
-            # Har bir bo‘lak bo‘yicha Q() orqali OR qidiruv
-            q_obj = Q()
-            for p in parts:
-                q_obj |= Q(user__first_name__icontains=p)
-                q_obj |= Q(user__last_name__icontains=p)
-                q_obj |= Q(science__name__icontains=p)
+            q = Q()
+            for part in parts:
+                q |= Q(user__first_name__icontains=part)
+                q |= Q(user__last_name__icontains=part)
+                q |= Q(science__name__icontains=part)
+                q |= Q(user__address__icontains=part)
 
-            queryset = queryset.filter(q_obj)
+                # Telefonlar (faqat agar CharField bo'lsa)
+                q |= Q(user__phone1__icontains=part)
+                q |= Q(user__phone2__icontains=part)
+
+                # Passport (ko'pincha string bo'ladi)
+                q |= Q(user__passport__icontains=part)
+                q |= Q(dagree__icontains=part)
+
+                # Agar faqat raqam bo'lsa → experience
+                if part.isdigit():
+                    q |= Q(experience=int(part))
+
+            queryset = queryset.filter(q)
 
         return queryset
 
-# =========================================================
-# 2) TeacherDetailAPIView
-#    - bitta o'qituvchi haqida batafsil ma'lumot
-#    - slug orqali topiladi
-# =========================================================
+
+
+
 class TeacherDetailAPIView(APIView):
     """
     GET /api/teachers/<slug>/
@@ -169,169 +139,169 @@ class TeacherDetailAPIView(APIView):
 # 3) TeacherCreateAPIView
 #    - yangi o'qituvchi (+nested user creation agar serializer shunday yozilgan bo'lsa)
 # =========================================================
-class TeacherCreateAPIView(APIView):
-    """
-    POST /api/teachers/
+# class TeacherCreateAPIView(APIView):
+#     """
+#     POST /api/teachers/
 
-    Izoh:
-    - Bu view yangi Teacher yaratish uchun ishlatiladi.
-    - TeacherCreateUpdateSerializer ichida user create logikasi bo'lishi mumkin.
-    """
+#     Izoh:
+#     - Bu view yangi Teacher yaratish uchun ishlatiladi.
+#     - TeacherCreateUpdateSerializer ichida user create logikasi bo'lishi mumkin.
+#     """
 
-    permission_classes = [permissions.IsAuthenticated]  # faqat autentifikatsiyalangan foydalanuvchilar
+#     permission_classes = [permissions.IsAuthenticated]  # faqat autentifikatsiyalangan foydalanuvchilar
 
-    def post(self, request):
-        """
-        POST metod:
-        - request.data ni serializerga beramiz
-        - serializer.is_valid(raise_exception=True) qo'yilsa, xatolar avtomatik 400 qaytadi
-        - serializer.save() orqali model va nested user yaratiladi
-        """
+#     def post(self, request):
+#         """
+#         POST metod:
+#         - request.data ni serializerga beramiz
+#         - serializer.is_valid(raise_exception=True) qo'yilsa, xatolar avtomatik 400 qaytadi
+#         - serializer.save() orqali model va nested user yaratiladi
+#         """
 
-        # 1) Log: create chaqirildi
-        logger.info("Teacher CREATE API called")
+#         # 1) Log: create chaqirildi
+#         logger.info("Teacher CREATE API called")
 
-        # 2) Serializer yaratish: kiruvchi ma'lumotlarni tekshirish uchun
-        serializer = TeacherCreateUpdateSerializer(data=request.data, context={"request": request})
+#         # 2) Serializer yaratish: kiruvchi ma'lumotlarni tekshirish uchun
+#         serializer = TeacherCreateUpdateSerializer(data=request.data, context={"request": request})
 
-        # 3) Validatsiya: raise_exception=True bo'lsa, DRF avtomatik 400 qaytaradi va exceptionni ushlab qoladi.
-        if serializer.is_valid(raise_exception=False):
-            # 4) Agar valid bo'lsa saqlashni urinib ko'ramiz (nested create ichida transaction bo'lishi kerak)
-            try:
-                teacher = serializer.save()  # serializer ichida create() metod batafsil yozilgan bo'lishi kerak
-            except Exception as e:
-                # Agar save paytida xato bo'lsa, log qilamiz va 500 qaytaramiz
-                logger.error(f"Error while saving teacher: {e}", exc_info=True)
-                return Response({"detail": "O'qtuvchi yaratishda ichki xato yuz berdi."},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         # 3) Validatsiya: raise_exception=True bo'lsa, DRF avtomatik 400 qaytaradi va exceptionni ushlab qoladi.
+#         if serializer.is_valid(raise_exception=False):
+#             # 4) Agar valid bo'lsa saqlashni urinib ko'ramiz (nested create ichida transaction bo'lishi kerak)
+#             try:
+#                 teacher = serializer.save()  # serializer ichida create() metod batafsil yozilgan bo'lishi kerak
+#             except Exception as e:
+#                 # Agar save paytida xato bo'lsa, log qilamiz va 500 qaytaramiz
+#                 logger.error(f"Error while saving teacher: {e}", exc_info=True)
+#                 return Response({"detail": "O'qtuvchi yaratishda ichki xato yuz berdi."},
+#                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            # 5) Muvaffaqiyat logi va response
-            logger.info(f"Teacher created: {teacher.slug} (user: {teacher.user.get_full_name()})")
-            return Response({"detail": "O'qtuvchi muvaffaqiyatli yaratildi."}, status=status.HTTP_201_CREATED)
+#             # 5) Muvaffaqiyat logi va response
+#             logger.info(f"Teacher created: {teacher.slug} (user: {teacher.user.get_full_name()})")
+#             return Response({"detail": "O'qtuvchi muvaffaqiyatli yaratildi."}, status=status.HTTP_201_CREATED)
 
-        # Agar validatsiya xatosi bo'lsa, serializer.errors dict qaytariladi
-        # Note: agar raise_exception=True ishlatilsa shu qator keraksiz
-        logger.warning(f"Teacher create validation failed: {serializer.errors}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         # Agar validatsiya xatosi bo'lsa, serializer.errors dict qaytariladi
+#         # Note: agar raise_exception=True ishlatilsa shu qator keraksiz
+#         logger.warning(f"Teacher create validation failed: {serializer.errors}")
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # =========================================================
 # 4) TeacherUpdateAPIView
 #    - PUT (to'liq yangilash) va PATCH (qisman yangilash)
 # =========================================================
-class TeacherUpdateAPIView(APIView):
-    """
-    PUT /api/teachers/<slug>/
-    PATCH /api/teachers/<slug>/
+# class TeacherUpdateAPIView(APIView):
+#     """
+#     PUT /api/teachers/<slug>/
+#     PATCH /api/teachers/<slug>/
 
-    Izoh:
-    - PUT to'liq yangilash deb qaraladi (partial=False)
-    - PATCH qisman yangilash uchun (partial=True)
-    - Serializer ichida user update uchun ham logika bo'lishi kerak
-    """
+#     Izoh:
+#     - PUT to'liq yangilash deb qaraladi (partial=False)
+#     - PATCH qisman yangilash uchun (partial=True)
+#     - Serializer ichida user update uchun ham logika bo'lishi kerak
+#     """
 
-    permission_classes = [permissions.IsAuthenticated]  # faqat autentifikatsiyalangan foydalanuvchilar
+#     permission_classes = [permissions.IsAuthenticated]  # faqat autentifikatsiyalangan foydalanuvchilar
 
-    def get_object(self, slug):
-        """
-        Helper metod:
-        - get_object_or_404 chaqiradi va Teacher obyektini qaytaradi.
-        - view ichidagi PUT/PATCH da DRY uchun ishlatiladi.
-        """
-        return get_object_or_404(Teacher.objects.select_related("user", "science").prefetch_related(
-            "teacher_group", "teacher_certificates", "teacher_sms"
-        ), slug=slug)
+#     def get_object(self, slug):
+#         """
+#         Helper metod:
+#         - get_object_or_404 chaqiradi va Teacher obyektini qaytaradi.
+#         - view ichidagi PUT/PATCH da DRY uchun ishlatiladi.
+#         """
+#         return get_object_or_404(Teacher.objects.select_related("user", "science").prefetch_related(
+#             "teacher_group", "teacher_certificates", "teacher_sms"
+#         ), slug=slug)
 
-    def put(self, request, slug):
-        """
-        PUT — to'liq yangilash.
-        - partial=False (ya'ni barcha required maydonlar berilishi shart).
-        """
-        logger.info(f"Teacher UPDATE (PUT) called | slug={slug}")
+#     def put(self, request, slug):
+#         """
+#         PUT — to'liq yangilash.
+#         - partial=False (ya'ni barcha required maydonlar berilishi shart).
+#         """
+#         logger.info(f"Teacher UPDATE (PUT) called | slug={slug}")
 
-        teacher = self.get_object(slug)  # obyektni olish
+#         teacher = self.get_object(slug)  # obyektni olish
 
-        # Serializerni yaratamiz: instance va yangi data bilan
-        serializer = TeacherCreateUpdateSerializer(instance=teacher, data=request.data, partial=False,
-                                                   context={"request": request})
+#         # Serializerni yaratamiz: instance va yangi data bilan
+#         serializer = TeacherCreateUpdateSerializer(instance=teacher, data=request.data, partial=False,
+#                                                    context={"request": request})
 
-        # Validatsiya va saqlash
-        if serializer.is_valid(raise_exception=False):
-            try:
-                serializer.save()  # serializer.update() yoki nested user update ishlaydi
-            except Exception as e:
-                logger.error(f"Error updating teacher (PUT): {e}", exc_info=True)
-                return Response({"detail": "Yangilashda ichki xato yuz berdi."},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         # Validatsiya va saqlash
+#         if serializer.is_valid(raise_exception=False):
+#             try:
+#                 serializer.save()  # serializer.update() yoki nested user update ishlaydi
+#             except Exception as e:
+#                 logger.error(f"Error updating teacher (PUT): {e}", exc_info=True)
+#                 return Response({"detail": "Yangilashda ichki xato yuz berdi."},
+#                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            logger.info(f"Teacher updated (PUT): {slug}")
-            return Response({"detail": "O'qtuvchi to'liq yangilandi."}, status=status.HTTP_200_OK)
+#             logger.info(f"Teacher updated (PUT): {slug}")
+#             return Response({"detail": "O'qtuvchi to'liq yangilandi."}, status=status.HTTP_200_OK)
 
-        # Validatsiya xatolari bo'lsa
-        logger.warning(f"Teacher update (PUT) validation failed: {serializer.errors}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         # Validatsiya xatolari bo'lsa
+#         logger.warning(f"Teacher update (PUT) validation failed: {serializer.errors}")
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, slug):
-        """
-        PATCH — qisman yangilash.
-        - partial=True (faqat berilgan maydonlar yangilanadi).
-        """
-        logger.info(f"Teacher UPDATE (PATCH) called | slug={slug}")
+#     def patch(self, request, slug):
+#         """
+#         PATCH — qisman yangilash.
+#         - partial=True (faqat berilgan maydonlar yangilanadi).
+#         """
+#         logger.info(f"Teacher UPDATE (PATCH) called | slug={slug}")
 
-        teacher = self.get_object(slug)
+#         teacher = self.get_object(slug)
 
-        serializer = TeacherCreateUpdateSerializer(instance=teacher, data=request.data, partial=True,
-                                                   context={"request": request})
+#         serializer = TeacherCreateUpdateSerializer(instance=teacher, data=request.data, partial=True,
+#                                                    context={"request": request})
 
-        if serializer.is_valid(raise_exception=False):
-            try:
-                serializer.save()
-            except Exception as e:
-                logger.error(f"Error updating teacher (PATCH): {e}", exc_info=True)
-                return Response({"detail": "Qisman yangilashda ichki xato yuz berdi."},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         if serializer.is_valid(raise_exception=False):
+#             try:
+#                 serializer.save()
+#             except Exception as e:
+#                 logger.error(f"Error updating teacher (PATCH): {e}", exc_info=True)
+#                 return Response({"detail": "Qisman yangilashda ichki xato yuz berdi."},
+#                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            logger.info(f"Teacher updated (PATCH): {slug}")
-            return Response({"detail": "O'qtuvchi qisman yangilandi."}, status=status.HTTP_200_OK)
+#             logger.info(f"Teacher updated (PATCH): {slug}")
+#             return Response({"detail": "O'qtuvchi qisman yangilandi."}, status=status.HTTP_200_OK)
 
-        logger.warning(f"Teacher update (PATCH) validation failed: {serializer.errors}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         logger.warning(f"Teacher update (PATCH) validation failed: {serializer.errors}")
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # =========================================================
 # 5) TeacherDeleteAPIView
 #    - o'qituvchini o'chirish (DELETE)
 # =========================================================
-class TeacherDeleteAPIView(APIView):
-    """
-    DELETE /api/teachers/<slug>/
+# class TeacherDeleteAPIView(APIView):
+#     """
+#     DELETE /api/teachers/<slug>/
 
-    Izoh:
-    - Teacher ni o'chirish CASCADE bilan bog'langan userni ham o'chirishi mumkin
-      (modelingizdagi on_delete parametrlarga qarab).
-    """
+#     Izoh:
+#     - Teacher ni o'chirish CASCADE bilan bog'langan userni ham o'chirishi mumkin
+#       (modelingizdagi on_delete parametrlarga qarab).
+#     """
 
-    permission_classes = [permissions.IsAuthenticated]
+#     permission_classes = [permissions.IsAuthenticated]
 
-    def delete(self, request, slug):
-        # 1) Log: delete chaqirildi
-        logger.info(f"Teacher DELETE called | slug={slug}")
+#     def delete(self, request, slug):
+#         # 1) Log: delete chaqirildi
+#         logger.info(f"Teacher DELETE called | slug={slug}")
 
-        # 2) Teacher obyektini olish yoki 404 qaytarish
-        teacher = get_object_or_404(Teacher, slug=slug)
+#         # 2) Teacher obyektini olish yoki 404 qaytarish
+#         teacher = get_object_or_404(Teacher, slug=slug)
 
-        # 3) Obyektni o'chirish
-        try:
-            teacher.delete()  # agar on_delete=CASCADE bo'lsa user ham o'chadi
-        except Exception as e:
-            # Xato bo'lsa log qilamiz va 500 qaytaramiz
-            logger.error(f"Error deleting teacher: {e}", exc_info=True)
-            return Response({"detail": "O'chirishda ichki xato yuz berdi."},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         # 3) Obyektni o'chirish
+#         try:
+#             teacher.delete()  # agar on_delete=CASCADE bo'lsa user ham o'chadi
+#         except Exception as e:
+#             # Xato bo'lsa log qilamiz va 500 qaytaramiz
+#             logger.error(f"Error deleting teacher: {e}", exc_info=True)
+#             return Response({"detail": "O'chirishda ichki xato yuz berdi."},
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # 4) Muvaffaqiyatli o'chirish logi va 204 NO CONTENT
-        logger.warning(f"Teacher deleted: {slug}")
-        return Response({"detail": "O'qtuvchi muvaffaqiyatli o'chirildi."}, status=status.HTTP_204_NO_CONTENT)
+#         # 4) Muvaffaqiyatli o'chirish logi va 204 NO CONTENT
+#         logger.warning(f"Teacher deleted: {slug}")
+#         return Response({"detail": "O'qtuvchi muvaffaqiyatli o'chirildi."}, status=status.HTTP_204_NO_CONTENT)
 
 
 
